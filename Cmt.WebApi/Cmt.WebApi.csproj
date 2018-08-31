@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+    <Folder Include="Models\" />
+    <Folder Include="Configuration\" />
+    <Folder Include="ExceptionHandlers\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="ExceptionHandlers\Handlers\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Filters\" />
+    <Folder Include="Providers\" />
+    <Folder Include="Extensions\ServiceExtensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cmt.Bll\Cmt.Bll.csproj" />
+    <ProjectReference Include="..\Cmt.Common\Cmt.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Configuration\Configuration.cs" />
+    <Compile Remove="Infrastructure\IHttpActionResult.cs" />
+    <Compile Remove="Infrastructure\ErrorResult.cs" />
+    <Compile Remove="Filters\ModelValidationAsyncActionFilter.cs" />
+    <Compile Remove="ActionHandlers\ResponseFactories.cs" />
+    <Compile Remove="ActionResults\InvalidModelState.cs" />
+  </ItemGroup>
+</Project>
