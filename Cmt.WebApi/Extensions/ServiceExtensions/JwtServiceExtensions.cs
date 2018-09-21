@@ -18,22 +18,29 @@ namespace Cmt.WebApi.ServiceExtensions
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 
             services
-                .AddAuthentication(options => {
+                .AddAuthentication(options =>
+                {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer(options => {
-                    options.TokenValidationParameters.ValidateIssuer = jwtSettings.ValidateIssuer;
-                    options.TokenValidationParameters.ValidateAudience = jwtSettings.ValidateAudience;
-                    options.TokenValidationParameters.ValidateLifetime = jwtSettings.ValidateLifetime;
-                    options.TokenValidationParameters.ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey;
-                    options.TokenValidationParameters.IssuerSigningKey = JwtHelper.GetSecurityKey(jwtSettings.IssuerSigningKey);
-
-                    options.Events = new JwtBearerEvents
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        OnAuthenticationFailed = context => 
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = JwtHelper.GetSecurityKey(jwtSettings.SecretKey),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
                         {
                             var exception = context.Exception;
+                            // Logging ...
                             return Task.CompletedTask;
                         }
                     };

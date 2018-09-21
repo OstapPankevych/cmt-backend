@@ -28,12 +28,12 @@ namespace Cmt.WebApi
             services.ConfigureCmtDb(Configuration);
             services.ConfigureMapper();
 
+            services.AddSwaggerDocumentation();
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(InvalidModelStateFilterAttribute));
             });
-
-            services.ConfigureSwaggerUi();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,11 +45,10 @@ namespace Cmt.WebApi
             }
 
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
-
             app.UseJwt();
-            app.UseMvc();
+            app.UseSwaggerDocumentation();
 
-            app.UseSwaggerUi();
+            app.UseMvc();
         }
     }
 }

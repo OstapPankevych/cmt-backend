@@ -8,12 +8,15 @@
     <Compile Remove="Class1.cs" />
     <Compile Remove="Models\CourseTypeId.cs" />
     <Compile Remove="MapperProfile.cs" />
+    <Compile Remove="DTOs\Users.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DTOs\" />
     <Folder Include="Identity\" />
     <Folder Include="Settings\" />
     <Folder Include="Helpers\" />
+    <Folder Include="DTOs\Courses\" />
+    <Folder Include="DTOs\Users\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.2" />

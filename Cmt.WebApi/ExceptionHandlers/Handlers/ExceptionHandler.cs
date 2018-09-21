@@ -7,6 +7,7 @@ namespace Cmt.WebApi.ExceptionHandlers.Handlers
     {
         public HttpException Handle(Exception ex)
         {
+            // Logging...
             return new HttpException
             {
                 StatusCode = StatusCodes.Status500InternalServerError

@@ -13,6 +13,7 @@ using Cmt.Common.Settings;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Helpers;
+using Cmt.Common.DTOs.Users;
 
 namespace Cmt.Bll.Services
 {
@@ -35,7 +36,7 @@ namespace Cmt.Bll.Services
             _authSettings = authSettings;
         }
 
-        public async Task<string> SignInAsync(string email, string password)
+        public async Task<UserDto> SignInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -65,11 +66,13 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.WrongLoginOrPassword) } };
             }
 
-            var claims = await _userManager.GetClaimsAsync(user);
-            var token = GetJwtSecurityToken(claims);
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var jwtToken = await GetJwtToken(user);
 
-            return tokenString;
+            return new UserDto
+            {
+                Name = user.UserName,
+                Jwt = jwtToken
+            };
         }
 
         public async Task SignOutAsync()
@@ -79,7 +82,6 @@ namespace Cmt.Bll.Services
 
         public async Task<int> CreateAsync(CmtIdentityUser user, string password)
         {
-            //var saltPass = SaltPassword(password);
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded)
             {
@@ -97,27 +99,31 @@ namespace Cmt.Bll.Services
             return user.Id;
         }
 
-        private JwtSecurityToken GetJwtSecurityToken(IList<Claim> claims)
-        {
-            var securityKey = JwtHelper.GetSecurityKey(_authSettings.JwtSecurityKey);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(_authSettings.JwtExpirationTimeMinutes),
-                signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-            );
-
-            return token;
-        }
-
-        private string SaltPassword(string password)
-        {
-            return password + _authSettings.PasswordSalt;
-        }
-
         private IEnumerable<ErrorResult> GetErrors(IEnumerable<IdentityError> errors)
         {
             return errors?.Select(x => new ErrorResult(x.Code));
+        }
+
+        private async Task<JwtDto> GetJwtToken(CmtIdentityUser user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = JwtHelper.GetSecurityKey(_authSettings.JwtSecurityKey);
+            var claims = await _userManager.GetClaimsAsync(user);
+            var expires = DateTime.Now.AddMinutes(_authSettings.JwtExpirationTimeMinutes);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = expires,
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new JwtDto
+            {
+                AccessToken = tokenString,
+                Expires = expires
+            };
         }
     }
 }

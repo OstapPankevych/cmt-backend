@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Cmt.WebApi.Configuration
 {
-    public class LockoutSettings
+    public class LockoutConfig
     {
         public int DefaultLockoutMinutes { get; set; }
         public int MaxFailedAccessAttempts { get; set; }

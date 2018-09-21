@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cmt.Common.DTOs;
+using Cmt.Common.DTOs.Courses;
 
 namespace Cmt.Bll.Services.Interfaces
 {

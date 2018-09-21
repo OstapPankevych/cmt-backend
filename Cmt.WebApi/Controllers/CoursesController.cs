@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.DTOs;
+using Cmt.Common.DTOs.Courses;
 using Cmt.Common.Identity;
 using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;

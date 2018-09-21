@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Cmt.WebApi.Configuration
 {
-    public class PasswordSettigs
+    public class PasswordConfig
     {
         public bool RequireDigit { get; set; }
         public int RequiredLength { get; set; }
@@ -9,6 +9,5 @@ namespace Cmt.WebApi.Configuration
         public bool RequireUppercase { get; set; }
         public bool RequireLowercase { get; set; }
         public int RequiredUniqueChars { get; set; }
-        public string Salt { get; set; }
     }
 }

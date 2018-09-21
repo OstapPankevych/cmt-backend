@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.Identity;
-using Cmt.WebApi.Models;
-using Microsoft.AspNetCore.Http;
+using Cmt.WebApi.Models.Users;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace Cmt.WebApi.Controllers
 {
@@ -27,8 +24,10 @@ namespace Cmt.WebApi.Controllers
         [Route("SignIn")]
         public async Task<IActionResult> SignInAsync([FromBody] SignInUser model)
         {
-            var token = await _authService.SignInAsync(model.Email, model.Password);
-            return Ok(token);
+            var userDto = await _authService.SignInAsync(model.Email, model.Password);
+            var user = Mapper.Map<User>(userDto);
+
+            return Ok(user);
         }
 
         [HttpPost]
@@ -37,6 +36,7 @@ namespace Cmt.WebApi.Controllers
         {
             var user = Mapper.Map<CmtIdentityUser>(model);
             var id = await _authService.CreateAsync(user, model.Password);
+
             return Ok(id);
         }
 

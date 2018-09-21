@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Cmt.WebApi.Configuration
 {
-    public class UserSettings
+    public class UserConfig
     {
         public bool RequireUniqueEmail { get; set; }
     }

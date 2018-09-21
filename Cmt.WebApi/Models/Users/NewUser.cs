@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cmt.WebApi.Models
+namespace Cmt.WebApi.Models.Users
 {
     public class NewUser
     {

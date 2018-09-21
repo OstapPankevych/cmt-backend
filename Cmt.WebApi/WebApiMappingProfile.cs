@@ -1,8 +1,10 @@
 ﻿using System;
 using AutoMapper;
-using Cmt.Common.DTOs;
+using Cmt.Common.DTOs.Courses;
+using Cmt.Common.DTOs.Users;
 using Cmt.Common.Identity;
 using Cmt.WebApi.Models;
+using Cmt.WebApi.Models.Users;
 
 namespace Cmt.WebApi
 {
@@ -15,9 +17,10 @@ namespace Cmt.WebApi
 
             CreateMap<NewUser, CmtIdentityUser>()
                 .ForMember(dest => dest.UserName,
-                    opts => opts.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Email,
-                    opts => opts.MapFrom(src => src.Email));
+                    opts => opts.MapFrom(src => src.Name));
+
+            CreateMap<User, UserDto>();
+            CreateMap<Jwt, JwtDto>();
         }
     }
 }

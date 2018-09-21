@@ -5,6 +5,5 @@ namespace Cmt.Common.Settings
     {
         public string JwtSecurityKey { get; set; }
         public int JwtExpirationTimeMinutes { get; set; }
-        public string PasswordSalt { get; set; }
     }
 }

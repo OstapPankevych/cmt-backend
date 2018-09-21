@@ -27,9 +27,8 @@ namespace Cmt.WebApi.ServiceExtensions
 
             return new AuthSettings
             {
-                JwtSecurityKey = jwtSettings.IssuerSigningKey,
-                JwtExpirationTimeMinutes = jwtSettings.UserExpirationTimeMinutes,
-                PasswordSalt = passwordSettings.Salt
+                JwtSecurityKey = jwtSettings.SecretKey,
+                JwtExpirationTimeMinutes = jwtSettings.UserExpirationTimeMinutes
             };
         }
     }

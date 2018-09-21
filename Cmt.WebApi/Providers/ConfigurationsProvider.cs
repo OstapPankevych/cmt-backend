@@ -5,36 +5,36 @@ namespace Cmt.WebApi.Providers
 {
     public static class ConfigurationsProvider
     {
-        public static PasswordSettigs GetPasswordSettings(IConfiguration configuration)
+        public static PasswordConfig GetPasswordSettings(IConfiguration configuration)
         {
-            var passwordSettings = new PasswordSettigs();
+            var passwordSettings = new PasswordConfig();
             var configPassword = configuration.GetSection(Constants.PasswordConfigurationSection);
             configPassword.Bind(passwordSettings);
 
             return passwordSettings;
         }
 
-        public static LockoutSettings GetLockoutSettings(IConfiguration configuration)
+        public static LockoutConfig GetLockoutSettings(IConfiguration configuration)
         {
-            var lockoutSettings = new LockoutSettings();
+            var lockoutSettings = new LockoutConfig();
             var configLockout = configuration.GetSection(Constants.LockoutConfigurationSection);
             configLockout.Bind(configLockout);
 
             return lockoutSettings;
         }
 
-        public static JwtSettings GetJwtSettings(IConfiguration configuration)
+        public static JwtConfig GetJwtSettings(IConfiguration configuration)
         {
-            var jwtSettings = new JwtSettings();
+            var jwtSettings = new JwtConfig();
             var configJwt = configuration.GetSection(Constants.JwtConfigurationSection);
             configJwt.Bind(jwtSettings);
 
             return jwtSettings;
         }
 
-        public static UserSettings GetUserSettings(IConfiguration configuration)
+        public static UserConfig GetUserSettings(IConfiguration configuration)
         {
-            var userSettings = new UserSettings();
+            var userSettings = new UserConfig();
             var configUser = configuration.GetSection(Constants.UserConfigurationSection);
             configUser.Bind(configUser);
 

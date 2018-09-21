@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.DTOs;
+using Cmt.Common.DTOs.Courses;
 using Cmt.Dal.Entities;
 using Cmt.Dal.Repositories.Interfaces;
 

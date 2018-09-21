@@ -1,6 +1,6 @@
 ﻿using System;
 using AutoMapper;
-using Cmt.Common.DTOs;
+using Cmt.Common.DTOs.Courses;
 using Cmt.Dal.Entities;
 
 namespace Cmt.Bll
