@@ -1,5 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Cmt.WebApi.Infrastructure.Constants;
 
 namespace Cmt.WebApi.Models.Users
 {

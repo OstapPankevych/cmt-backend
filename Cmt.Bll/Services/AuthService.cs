@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.Identity;

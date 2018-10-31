@@ -1,11 +1,10 @@
-﻿using Cmt.WebApi.Middleware;
+﻿using Cmt.WebApi.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Cmt.WebApi.Filters;
-using Cmt.WebApi.ServiceExtensions;
-using Cmt.WebApi.Extensions.ServiceExtensions;
+using Cmt.WebApi.Infrastructure.ServiceExtensions;
+using Cmt.WebApi.Infrastructure.Filters;
 
 namespace Cmt.WebApi
 {
