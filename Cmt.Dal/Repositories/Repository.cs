@@ -5,55 +5,54 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cmt.Dal.Repositories
 {
-    public abstract class Repository<T> : IRepository<T> where T: Entity
+    public abstract class Repository<T, U> : IRepository<T, U> where T: Entity<U>
     {
-        protected DbContextOptions<CmtContext> options;
+        protected CmtContext DbContext { get; }
+        protected DbSet<T> DbSet;
 
-        protected Repository(DbContextOptions<CmtContext> options)
+        protected Repository(CmtContext dbContext)
         {
-            this.options = options;
+            DbContext = dbContext;
+            DbSet = DbContext.Set<T>();
         }
 
-        public async Task<int> CreateAsync(T entity)
+        public virtual async Task<U> CreateAsync(T entity)
         {
-            using (var db = CreateContext())
+            DbContext.Add(entity);
+            await DbContext.SaveChangesAsync();
+
+            return entity.Id;
+        }
+
+        public virtual Task<T> GetAsync(U id)
+        {
+            return DbContext.FindAsync<T>(id);
+        }
+
+        public virtual void Add(T entity)
+        {
+            DbSet.Add(entity);
+        }
+
+        public virtual void Update(T entity)
+        {
+            DbSet.Attach(entity);
+            DbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public virtual void Remove(U id)
+        {
+            var entity = DbSet.Find(id);
+            Remove(entity);
+        }
+
+        public virtual void Remove(T entity)
+        {
+            if (DbContext.Entry(entity).State == EntityState.Detached)
             {
-                db.Add(entity);
-                await db.SaveChangesAsync();
-
-                return entity.Id;
+                DbSet.Attach(entity);
             }
-        }
-
-        public async Task<T> GetAsync(int id)
-        {
-            using (var db = CreateContext())
-            {
-                return await db.FindAsync<T>(id);
-            }
-        }
-
-        public async void UpdateAsync(T entity)
-        {
-            using (var db = CreateContext())
-            {
-                db.Update(entity);
-                await db.SaveChangesAsync();
-            }
-        }
-
-        public async void RemoveAsync(T entity)
-        {
-            using (var db = CreateContext())
-            {
-                db.Remove(entity);
-                await db.SaveChangesAsync();
-            }
-        }
-
-        protected CmtContext CreateContext()
-        {
-            return new CmtContext(options);
+            DbSet.Remove(entity);
         }
     }
 }

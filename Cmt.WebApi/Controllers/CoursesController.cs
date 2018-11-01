@@ -46,5 +46,15 @@ namespace Cmt.WebApi.Controllers
 
             return Ok(id);
         }
+
+        [HttpPut]
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> PutAsync([FromBody] CourseModel model)
+        {
+            var course = _mapper.Map<CourseDto>(model);
+            var id = await _courseService.CreateAsync(course);
+
+            return Ok(id);
+        }
     }
 }

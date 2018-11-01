@@ -8,14 +8,16 @@ using Cmt.Dal.Repositories.Interfaces;
 
 namespace Cmt.Bll.Services
 {
-    public class CoursesService: ICoursesService
+    public class CoursesService: Service, ICoursesService
     {
         private readonly ICoursesRepository _courseRepository;
         private readonly IMapper _mapper;
 
         public CoursesService(
             IMapper mapper,
+            IUnitOfWork unitOfWork,
             ICoursesRepository courseRepository)
+            : base (unitOfWork)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;

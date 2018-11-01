@@ -1,11 +1,8 @@
 ﻿using System;
-namespace Cmt.Dal.Entities
+namespace Cmt.Common.DTOs
 {
-    public class Entity<T>
+    public abstract class BaseDto<T>
     {
-        public Entity() {}
-        public Entity(T id) { Id = id; }
-
         public T Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

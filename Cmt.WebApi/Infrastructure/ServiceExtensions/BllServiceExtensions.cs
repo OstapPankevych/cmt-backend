@@ -24,6 +24,7 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
         {
             services.AddTransient<ICoursesService, CoursesService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ICoursesRepository, CoursesRepository>();
         }
     }
