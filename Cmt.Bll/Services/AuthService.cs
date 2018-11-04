@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Cmt.Common.Settings;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Helpers;
 using Cmt.Common.DTOs.Users;
+using Cmt.Dal.Entities.Identities;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Cmt.Common.Constants;
 
 namespace Cmt.Bll.Services
 {

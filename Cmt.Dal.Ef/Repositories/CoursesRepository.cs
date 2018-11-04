@@ -1,7 +1,7 @@
 ﻿using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Interfaces.Repositories;
 
-namespace Cmt.Dal.Repositories
+namespace Cmt.Dal.Ef.Repositories
 {
     public class CoursesRepository : Repository<CourseEntity, int>, ICoursesRepository
     {

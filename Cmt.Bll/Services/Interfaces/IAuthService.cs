@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Cmt.Common.DTOs.Users;
-using Cmt.Common.Identity;
+using Cmt.Dal.Entities.Identities;
 
 namespace Cmt.Bll.Services.Interfaces
 {

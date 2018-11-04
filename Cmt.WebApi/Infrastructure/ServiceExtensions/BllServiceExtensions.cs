@@ -1,8 +1,8 @@
 ﻿using Cmt.Bll.Services;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Ef;
+using Cmt.Dal.Ef.Repositories;
+using Cmt.Dal.Interfaces.Repositories;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.EntityFrameworkCore;

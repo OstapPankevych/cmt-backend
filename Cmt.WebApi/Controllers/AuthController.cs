@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.Identity;
+using Cmt.Dal.Entities.Identities;
 using Cmt.WebApi.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Cmt.Dal.Repositories.Interfaces
+namespace Cmt.Dal.Interfaces.Repositories
 {
     public interface IRepository<T, U>
     {

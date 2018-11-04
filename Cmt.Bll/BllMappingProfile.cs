@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Cmt.Common.DTOs.Courses;
 using Cmt.Dal.Entities;
 

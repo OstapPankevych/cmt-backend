@@ -1,7 +1,7 @@
 ﻿using System;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Interfaces.Repositories;
 
 namespace Cmt.Bll.Services
 {

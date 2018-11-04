@@ -1,25 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Class1.cs" />
-    <Compile Remove="Models\CourseTypeId.cs" />
-    <Compile Remove="MapperProfile.cs" />
-    <Compile Remove="DTOs\Users.cs" />
+    <Folder Include="Constants\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Identity\" />
-    <Folder Include="Settings\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="DTOs\Courses\" />
-    <Folder Include="DTOs\Users\" />
+    <Compile Remove="Identity\CmtIdentityUser.cs" />
+    <Compile Remove="Identity\CmtIdentityRole.cs" />
+    <Compile Remove="Identity\UserRoles.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.2" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cmt.Dal\Cmt.Dal.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IdentityModel.Tokens">

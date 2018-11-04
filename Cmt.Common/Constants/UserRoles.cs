@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Common.Identity
+﻿namespace Cmt.Common.Constants
 {
     public static class UserRoles
     {

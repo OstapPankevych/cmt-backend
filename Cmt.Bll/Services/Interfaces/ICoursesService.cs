@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Cmt.Common.DTOs.Courses;
 
 namespace Cmt.Bll.Services.Interfaces

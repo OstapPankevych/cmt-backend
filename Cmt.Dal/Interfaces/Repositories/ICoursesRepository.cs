@@ -1,6 +1,6 @@
 ﻿using Cmt.Dal.Entities;
 
-namespace Cmt.Dal.Repositories.Interfaces
+namespace Cmt.Dal.Interfaces.Repositories
 {
     public interface ICoursesRepository: IRepository<CourseEntity, int>
     {

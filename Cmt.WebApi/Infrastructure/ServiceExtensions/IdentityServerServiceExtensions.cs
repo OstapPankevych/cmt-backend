@@ -1,6 +1,6 @@
 ﻿using System;
-using Cmt.Common.Identity;
-using Cmt.Dal.Entities.Identity;
+using Cmt.Dal.Ef;
+using Cmt.Dal.Entities.Identities;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Identity;

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Bll.Services.Exceptions.Auth
+﻿namespace Cmt.Bll.Services.Exceptions.Auth
 {
     public static class AuthErrorCode
     {

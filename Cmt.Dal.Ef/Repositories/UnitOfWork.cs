@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Interfaces.Repositories;
 
-namespace Cmt.Dal.Repositories
+namespace Cmt.Dal.Ef.Repositories
 {
     public class UnitOfWork: IUnitOfWork
     {

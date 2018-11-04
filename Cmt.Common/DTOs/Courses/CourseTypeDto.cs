@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Common.DTOs.Courses
+﻿namespace Cmt.Common.DTOs.Courses
 {
     public class CourseTypeDto: BaseDto<int>
     {

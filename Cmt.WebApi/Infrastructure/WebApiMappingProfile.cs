@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Cmt.Common.DTOs.Courses;
 using Cmt.Common.DTOs.Users;
-using Cmt.Common.Identity;
+using Cmt.Dal.Entities.Identities;
 using Cmt.WebApi.Models;
 using Cmt.WebApi.Models.Users;
 

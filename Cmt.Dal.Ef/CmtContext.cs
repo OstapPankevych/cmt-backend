@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Cmt.Dal.Entities;
 using Microsoft.EntityFrameworkCore;
-namespace Cmt.Dal.Entities
+
+namespace Cmt.Dal.Ef
 {
     public class CmtContext: DbContext
     {

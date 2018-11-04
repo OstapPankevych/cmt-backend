@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Cmt.Bll;
+﻿using Cmt.Bll;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cmt.WebApi.Infrastructure.ServiceExtensions

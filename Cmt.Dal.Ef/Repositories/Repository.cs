@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cmt.Dal.Repositories
+namespace Cmt.Dal.Ef.Repositories
 {
     public abstract class Repository<T, U> : IRepository<T, U> where T: Entity<U>
     {
