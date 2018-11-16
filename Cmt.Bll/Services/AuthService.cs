@@ -88,13 +88,7 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = GetErrors(result.Errors) };
             }
 
-            var claimResult = await _userManager.AddClaimAsync(user,
-                new Claim(ClaimTypes.Role, UserRoles.User));
-
-            if (!claimResult.Succeeded)
-            {
-                throw new AuthException { Errors = GetErrors(claimResult.Errors) };
-            }
+            await AddInRoleAsync(UserRoles.User, user);
 
             return user.Id;
         }
@@ -124,6 +118,48 @@ namespace Cmt.Bll.Services
                 AccessToken = tokenString,
                 Expires = expires
             };
+        }
+
+        private async Task AddInRoleAsync(string roleName, CmtIdentityUser user)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName)
+                       ?? await CreateRole(roleName);
+
+
+            var claims = await _roleManager.GetClaimsAsync(role)
+                         ?? new List<Claim> { await CreateClaim(role, ClaimTypes.Role, roleName) };
+                                           
+            var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+
+            if (!userClaimsResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
+            }
+        }
+
+        private async Task<CmtIdentityRole> CreateRole(string roleName)
+        {
+            var role = new CmtIdentityRole { Name = roleName };
+            var roleResult = await _roleManager.CreateAsync(role);
+            if (!roleResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(roleResult.Errors) };
+            }
+
+            return role;
+        }
+
+        private async Task<Claim> CreateClaim(CmtIdentityRole role, string type, string value)
+        {
+            var claim = new Claim(type, value);
+            var claimResult = await _roleManager.AddClaimAsync(role, claim);
+
+            if (!claimResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(claimResult.Errors) };
+            }
+
+            return claim;
         }
     }
 }
