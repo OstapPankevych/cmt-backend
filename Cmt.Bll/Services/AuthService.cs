@@ -125,7 +125,6 @@ namespace Cmt.Bll.Services
             var role = await _roleManager.FindByNameAsync(roleName)
                        ?? await CreateRole(roleName);
 
-
             var claims = await _roleManager.GetClaimsAsync(role)
                          ?? new List<Claim> { await CreateClaim(role, ClaimTypes.Role, roleName) };
                                            
