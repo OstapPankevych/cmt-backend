@@ -18,16 +18,41 @@ namespace Cmt.WebApi
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IHostingEnvironment env)
+        {
+            ConfigureCommonServices(services);
+
+            if (env.IsDevelopment() || env.IsStaging())
+            {
+                services.AddSwaggerDocumentation();
+            }
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            ConfigureCommon(app);
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            if (env.IsDevelopment() || env.IsStaging())
+            {
+                app.UseSwaggerDocumentation();
+            }
+        }
+
+        private void ConfigureCommonServices(IServiceCollection services)
         {
             services.ConfigureBllServices();
             services.ConfigureWebApiServices(Configuration);
             services.ConfigureIdentityServer(Configuration);
             services.ConfigureJwt(Configuration);
-            services.ConfigureCmtDb(Configuration);
+            services.ConfigureEfDb(Configuration);
+            services.ConfigureEfRepositories();
             services.ConfigureMapper();
-
-            services.AddSwaggerDocumentation();
 
             services.AddMvc(options =>
             {
@@ -35,18 +60,10 @@ namespace Cmt.WebApi
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        private void ConfigureCommon(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
             app.UseJwt();
-            app.UseSwaggerDocumentation();
-
             app.UseMvc();
         }
     }

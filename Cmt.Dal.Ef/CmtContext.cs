@@ -8,7 +8,6 @@ namespace Cmt.Dal.Ef
         public CmtContext(DbContextOptions<CmtContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public DbSet<CourseEntity> Courses { get; set; }

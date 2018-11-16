@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Cmt.Common.Helpers;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

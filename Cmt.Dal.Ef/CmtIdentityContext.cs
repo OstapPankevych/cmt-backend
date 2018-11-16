@@ -10,7 +10,6 @@ namespace Cmt.Dal.Ef
         public CmtIdentityContext(DbContextOptions<CmtIdentityContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
     }
 }
