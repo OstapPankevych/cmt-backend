@@ -88,12 +88,12 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = GetErrors(result.Errors) };
             }
 
-            var roleResult = await _userManager.AddClaimAsync(user,
+            var claimResult = await _userManager.AddClaimAsync(user,
                 new Claim(ClaimTypes.Role, UserRoles.User));
 
-            if (!roleResult.Succeeded)
+            if (!claimResult.Succeeded)
             {
-                throw new AuthException { Errors = GetErrors(roleResult.Errors) };
+                throw new AuthException { Errors = GetErrors(claimResult.Errors) };
             }
 
             return user.Id;

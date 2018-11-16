@@ -10,19 +10,24 @@ namespace Cmt.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+
+        public Startup(
+            IConfiguration configuration,
+            IHostingEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IHostingEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             ConfigureCommonServices(services);
 
-            if (env.IsDevelopment() || env.IsStaging())
+            if (_env.IsDevelopment() || _env.IsStaging())
             {
                 services.AddSwaggerDocumentation();
             }

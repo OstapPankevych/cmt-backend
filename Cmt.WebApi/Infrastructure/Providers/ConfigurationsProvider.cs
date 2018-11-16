@@ -37,7 +37,7 @@ namespace Cmt.WebApi.Infrastructure.Providers
         {
             var userSettings = new UserConfig();
             var configUser = configuration.GetSection(WebApiConstants.UserConfigurationSection);
-            configUser.Bind(configUser);
+            configUser.Bind(userSettings);
 
             return userSettings;
         }
