@@ -45,10 +45,9 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                 });
         }
 
-        public static IApplicationBuilder UseJwt(this IApplicationBuilder app)
+        public static void UseJwt(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            return app;
         }
     }
 }
