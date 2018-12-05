@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,16 +11,10 @@
     <Compile Remove="Identity\CmtIdentityUser.cs" />
     <Compile Remove="Identity\CmtIdentityRole.cs" />
     <Compile Remove="Identity\UserRoles.cs" />
+    <Compile Remove="MapperProfile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="7.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cmt.Dal\Cmt.Dal.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.IdentityModel.Tokens">
-      <HintPath>..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.identitymodel.tokens\5.2.0\lib\netstandard1.4\Microsoft.IdentityModel.Tokens.dll</HintPath>
-    </Reference>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.3.0" />
   </ItemGroup>
 </Project>

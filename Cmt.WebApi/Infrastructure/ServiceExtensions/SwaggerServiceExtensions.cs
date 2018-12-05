@@ -34,7 +34,7 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
             return services;
         }
 
-        public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
+        public static void UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -42,10 +42,7 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                 c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Cmt API v1.0");
 
                 c.DocumentTitle = "Title Documentation";
-                c.DocExpansion(DocExpansion.None);
             });
-
-            return app;
         }
     }
 }

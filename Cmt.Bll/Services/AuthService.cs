@@ -11,9 +11,9 @@ using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Helpers;
 using Cmt.Common.DTOs.Users;
 using Cmt.Dal.Entities.Identities;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Cmt.Common.Constants;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Cmt.Bll.Services
 {
