@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Cmt.WebApi.Infrastructure.ServiceExtensions;
 using Cmt.WebApi.Infrastructure.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace Cmt.WebApi
 {
@@ -59,15 +60,26 @@ namespace Cmt.WebApi
             services.ConfigureEfRepositories();
             services.ConfigureMapper();
 
+            services.AddCors();
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(InvalidModelStateFilterAttribute));
             });
+
+            services.AddHttpContextAccessor();
         }
 
         private void ConfigureCommon(IApplicationBuilder app)
         {
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+
             app.UseJwt();
             app.UseMvc();
         }

@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Cmt.Common.Helpers;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,11 +18,17 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 
             services
-                .AddAuthentication(options =>
+                .AddAuthorization(options =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    var defaultAuthorizationPolicyBuilder =
+                        new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
+
+                    defaultAuthorizationPolicyBuilder =
+                        defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+
+                    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
                 })
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x =>
                 {
                     x.RequireHttpsMetadata = false;
@@ -30,17 +38,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = JwtHelper.GetSecurityKey(jwtSettings.SecretKey),
                         ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-
-                    x.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
-                        {
-                            var exception = context.Exception;
-                            // Logging ...
-                            return Task.CompletedTask;
-                        }
+                        ValidateAudience = false,
+                        ValidateLifetime = true
                     };
                 });
         }

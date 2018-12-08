@@ -4,6 +4,7 @@ using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.Constants;
 using Cmt.Common.DTOs.Courses;
 using Cmt.WebApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,8 @@ namespace Cmt.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = UserRoles.User)]
+        //[Authorize(Roles = UserRoles.User)]
+        [Authorize]
         public async Task<IActionResult> GetAsync(int id)
         {
             var course = await _courseService.GetAsync(id);

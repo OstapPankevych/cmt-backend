@@ -88,7 +88,20 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = GetErrors(result.Errors) };
             }
 
-            await AddInRoleAsync(UserRoles.User, user);
+            var role = await CreateRoleIfNotExists(UserRoles.User);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, role.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+            if (!userClaimsResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
+            }
 
             return user.Id;
         }
@@ -104,12 +117,14 @@ namespace Cmt.Bll.Services
             var key = JwtHelper.GetSecurityKey(_authSettings.JwtSecurityKey);
             var claims = await _userManager.GetClaimsAsync(user);
             var expires = DateTime.Now.AddMinutes(_authSettings.JwtExpirationTimeMinutes);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
@@ -120,45 +135,19 @@ namespace Cmt.Bll.Services
             };
         }
 
-        private async Task AddInRoleAsync(string roleName, CmtIdentityUser user)
+        private async Task<CmtIdentityRole> CreateRoleIfNotExists(string roleName)
         {
-            var role = await _roleManager.FindByNameAsync(roleName)
-                       ?? await CreateRole(roleName);
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role != null) return role;
 
-            var claims = await _roleManager.GetClaimsAsync(role)
-                         ?? new List<Claim> { await CreateClaim(role, ClaimTypes.Role, roleName) };
-                                           
-            var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
-
-            if (!userClaimsResult.Succeeded)
-            {
-                throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
-            }
-        }
-
-        private async Task<CmtIdentityRole> CreateRole(string roleName)
-        {
-            var role = new CmtIdentityRole { Name = roleName };
-            var roleResult = await _roleManager.CreateAsync(role);
+            var newRole = new CmtIdentityRole { Name = roleName };
+            var roleResult = await _roleManager.CreateAsync(newRole);
             if (!roleResult.Succeeded)
             {
                 throw new AuthException { Errors = GetErrors(roleResult.Errors) };
             }
 
-            return role;
-        }
-
-        private async Task<Claim> CreateClaim(CmtIdentityRole role, string type, string value)
-        {
-            var claim = new Claim(type, value);
-            var claimResult = await _roleManager.AddClaimAsync(role, claim);
-
-            if (!claimResult.Succeeded)
-            {
-                throw new AuthException { Errors = GetErrors(claimResult.Errors) };
-            }
-
-            return claim;
+            return newRole;
         }
     }
 }
