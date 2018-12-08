@@ -18,17 +18,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 
             services
-                .AddAuthorization(options =>
-                {
-                    var defaultAuthorizationPolicyBuilder =
-                        new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
-
-                    defaultAuthorizationPolicyBuilder =
-                        defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-
-                    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
-                })
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddAuthorization()
+                .AddAuthentication()
                 .AddJwtBearer(x =>
                 {
                     x.RequireHttpsMetadata = false;

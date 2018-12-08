@@ -3,6 +3,7 @@ using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.Constants;
 using Cmt.Common.DTOs.Courses;
+using Cmt.WebApi.Infrastructure.Filters;
 using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,8 +25,7 @@ namespace Cmt.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        //[Authorize(Roles = UserRoles.User)]
-        [Authorize]
+        [JwtAuthorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> GetAsync(int id)
         {
             var course = await _courseService.GetAsync(id);
@@ -39,7 +39,7 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = UserRoles.Admin)]
+        [JwtAuthorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> PostAsync([FromBody] CourseModel model)
         {
             var course = _mapper.Map<CourseDto>(model);
@@ -49,7 +49,7 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = UserRoles.Admin)]
+        [JwtAuthorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> PutAsync([FromBody] CourseModel model)
         {
             var course = _mapper.Map<CourseDto>(model);
