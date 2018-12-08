@@ -1,27 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Entities\" />
-    <Folder Include="Repositories\Interfaces\" />
-    <Folder Include="Entities\Identity\" />
+    <Folder Include="Entities\Identities\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cmt.Common\Cmt.Common.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Entities\Identity.cs" />
-    <Compile Remove="Entities\Identity\User.cs" />
+    <Compile Remove="Interfaces\Identities\Managers\ISignInManager.cs" />
   </ItemGroup>
 </Project>

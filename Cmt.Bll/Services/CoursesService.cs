@@ -1,21 +1,22 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.DTOs.Courses;
 using Cmt.Dal.Entities;
-using Cmt.Dal.Repositories.Interfaces;
+using Cmt.Dal.Interfaces.Repositories;
 
 namespace Cmt.Bll.Services
 {
-    public class CoursesService: ICoursesService
+    public class CoursesService: Service, ICoursesService
     {
         private readonly ICoursesRepository _courseRepository;
         private readonly IMapper _mapper;
 
         public CoursesService(
             IMapper mapper,
+            IUnitOfWork unitOfWork,
             ICoursesRepository courseRepository)
+            : base (unitOfWork)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;

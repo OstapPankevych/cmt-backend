@@ -1,9 +1,7 @@
-﻿using System;
-namespace Cmt.Common.DTOs.Courses
+﻿namespace Cmt.Common.DTOs.Courses
 {
-    public class CourseTypeDto
+    public class CourseTypeDto: BaseDto<int>
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

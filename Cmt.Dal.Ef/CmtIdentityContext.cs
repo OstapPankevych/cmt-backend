@@ -1,16 +1,15 @@
-﻿using System;
-using Cmt.Common.Identity;
+﻿using Cmt.Dal.Entities.Identities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cmt.Dal.Entities.Identity
+namespace Cmt.Dal.Ef
 {
-    public class CmtIdentityContext : IdentityDbContext<CmtIdentityUser, CmtIdentityRole, int>
+    public class CmtIdentityContext
+        : IdentityDbContext<CmtIdentityUser, CmtIdentityRole, int>
     {
         public CmtIdentityContext(DbContextOptions<CmtIdentityContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
     }
 }

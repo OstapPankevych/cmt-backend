@@ -1,6 +1,6 @@
 ﻿using System;
-using Cmt.Common.Identity;
-using Cmt.Dal.Entities.Identity;
+using Cmt.Dal.Ef;
+using Cmt.Dal.Entities.Identities;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Identity;
@@ -14,21 +14,12 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
     {
         public static void ConfigureIdentityServer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<CmtIdentityContext>(options =>
-                options.UseSqlServer(ConfigurationsProvider.GetConnectionString(
-                    WebApiConstants.CmtIdentityDatabaseConfigurationSection, configuration)));
-
-            services.AddIdentity<CmtIdentityUser, CmtIdentityRole>()
-                .AddEntityFrameworkStores<CmtIdentityContext>()
-                .AddDefaultTokenProviders();
-
             var passwordSettings = ConfigurationsProvider.GetPasswordSettings(configuration);
             var lockoutSettings = ConfigurationsProvider.GetLockoutSettings(configuration);
             var userSettings = ConfigurationsProvider.GetUserSettings(configuration);
 
             services.Configure<IdentityOptions>(options =>
             {
-
                 options.Password.RequireDigit = passwordSettings.RequireDigit;
                 options.Password.RequireDigit = passwordSettings.RequireDigit;
                 options.Password.RequiredLength = passwordSettings.RequiredLength;

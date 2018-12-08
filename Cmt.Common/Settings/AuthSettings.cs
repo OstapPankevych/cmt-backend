@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Common.Settings
+﻿namespace Cmt.Common.Settings
 {
     public class AuthSettings
     {

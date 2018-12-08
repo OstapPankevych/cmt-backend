@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Cmt.Common.Settings;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Helpers;
 using Cmt.Common.DTOs.Users;
+using Cmt.Dal.Entities.Identities;
+using Microsoft.IdentityModel.Tokens;
+using Cmt.Common.Constants;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Cmt.Bll.Services
 {
@@ -87,12 +88,19 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = GetErrors(result.Errors) };
             }
 
-            var roleResult = await _userManager.AddClaimAsync(user,
-                new Claim(ClaimTypes.Role, UserRoles.User));
+            var role = await CreateRoleIfNotExists(UserRoles.User);
 
-            if (!roleResult.Succeeded)
+            var claims = new List<Claim>
             {
-                throw new AuthException { Errors = GetErrors(roleResult.Errors) };
+                new Claim(ClaimTypes.Role, role.Name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
+
+            var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+            if (!userClaimsResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
             }
 
             return user.Id;
@@ -109,12 +117,14 @@ namespace Cmt.Bll.Services
             var key = JwtHelper.GetSecurityKey(_authSettings.JwtSecurityKey);
             var claims = await _userManager.GetClaimsAsync(user);
             var expires = DateTime.Now.AddMinutes(_authSettings.JwtExpirationTimeMinutes);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
@@ -123,6 +133,21 @@ namespace Cmt.Bll.Services
                 AccessToken = tokenString,
                 Expires = expires
             };
+        }
+
+        private async Task<CmtIdentityRole> CreateRoleIfNotExists(string roleName)
+        {
+            var role = await _roleManager.FindByNameAsync(roleName);
+            if (role != null) return role;
+
+            var newRole = new CmtIdentityRole { Name = roleName };
+            var roleResult = await _roleManager.CreateAsync(newRole);
+            if (!roleResult.Succeeded)
+            {
+                throw new AuthException { Errors = GetErrors(roleResult.Errors) };
+            }
+
+            return newRole;
         }
     }
 }

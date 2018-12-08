@@ -20,7 +20,7 @@ namespace Cmt.WebApi.Infrastructure.Filters
             }
 
             var errors = context.ModelState
-                .Where(e => e.Value.Errors.Count > 0)
+                .Where(e => e.Value.Errors.Any())
                 .Select(e => e.Key);
 
             var httpException = new HttpException 

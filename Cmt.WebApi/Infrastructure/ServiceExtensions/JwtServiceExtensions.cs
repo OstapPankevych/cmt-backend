@@ -1,9 +1,9 @@
-﻿using System;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Cmt.Common.Helpers;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +18,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 
             services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+                .AddAuthorization()
+                .AddAuthentication()
                 .AddJwtBearer(x =>
                 {
                     x.RequireHttpsMetadata = false;
@@ -32,25 +29,15 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = JwtHelper.GetSecurityKey(jwtSettings.SecretKey),
                         ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-
-                    x.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
-                        {
-                            var exception = context.Exception;
-                            // Logging ...
-                            return Task.CompletedTask;
-                        }
+                        ValidateAudience = false,
+                        ValidateLifetime = true
                     };
                 });
         }
 
-        public static IApplicationBuilder UseJwt(this IApplicationBuilder app)
+        public static void UseJwt(this IApplicationBuilder app)
         {
             app.UseAuthentication();
-            return app;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Common.DTOs.Users
+﻿namespace Cmt.Common.DTOs.Users
 {
     public class UserDto
     {

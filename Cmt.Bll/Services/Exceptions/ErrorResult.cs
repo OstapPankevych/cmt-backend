@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.Bll.Services.Exceptions
+﻿namespace Cmt.Bll.Services.Exceptions
 {
     public class ErrorResult
     {
