@@ -3,9 +3,9 @@ using Cmt.Dal.Interfaces.Repositories;
 
 namespace Cmt.Dal.Ef.Repositories
 {
-    public class CoursesRepository : Repository<CourseEntity, int>, ICoursesRepository
+    public class CourseRepository : Repository<CourseEntity, int>, ICourseRepository
     {
-        public CoursesRepository(CmtContext dbContext)
+        public CourseRepository(CmtContext dbContext)
             : base(dbContext)
         {}
     }

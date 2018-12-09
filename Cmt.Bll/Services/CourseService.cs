@@ -9,23 +9,27 @@ namespace Cmt.Bll.Services
 {
     public class CoursesService: Service, ICoursesService
     {
-        private readonly ICoursesRepository _courseRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICourseRepository _courseRepository;
 
         public CoursesService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            ICoursesRepository courseRepository)
+            ICourseRepository courseRepository)
             : base (unitOfWork)
         {
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
             _courseRepository = courseRepository;
         }
 
-        public Task<int> CreateAsync(CourseDto course)
+        public async Task<int> CreateAsync(CourseDto course)
         {
             var entity = _mapper.Map<CourseEntity>(course);
-            return _courseRepository.CreateAsync(entity);
+            await _courseRepository.AddAsync(entity);
+
+            return entity.Id;
         }
 
         public async Task<CourseDto> GetAsync(int id)

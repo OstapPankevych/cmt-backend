@@ -14,17 +14,20 @@ using Cmt.Dal.Entities.Identities;
 using Microsoft.IdentityModel.Tokens;
 using Cmt.Common.Constants;
 using System.IdentityModel.Tokens.Jwt;
+using Cmt.Dal.Interfaces.Repositories;
 
 namespace Cmt.Bll.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<CmtIdentityUser> _signInManager;
         private readonly UserManager<CmtIdentityUser> _userManager;
         private readonly RoleManager<CmtIdentityRole> _roleManager;
         private readonly AuthSettings _authSettings;
 
         public AuthService(
+            IUnitOfWork unitOfWork,
             SignInManager<CmtIdentityUser> signInManager,
             UserManager<CmtIdentityUser> userManager,
             RoleManager<CmtIdentityRole> roleManager,
@@ -33,6 +36,7 @@ namespace Cmt.Bll.Services
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
             _authSettings = authSettings;
         }
 
@@ -40,28 +44,20 @@ namespace Cmt.Bll.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-            {
                 throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.WrongLoginOrPassword) } };
-            }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
             if (!result.Succeeded)
             {
                 if (result.IsLockedOut)
-                {
                     throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.LockedOut) } };
-                }
 
                 if (result.IsNotAllowed)
-                {
                     throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.NotAllowed) } };
-                }
 
                 if (result.RequiresTwoFactor)
-                {
                     throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.RequiresTwoFactor) } };
-                }
 
                 throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.WrongLoginOrPassword) } };
             }
@@ -82,28 +78,37 @@ namespace Cmt.Bll.Services
 
         public async Task<int> CreateAsync(CmtIdentityUser user, string password)
         {
-            var result = await _userManager.CreateAsync(user, password);
-            if (!result.Succeeded)
+            using (var transaction = _unitOfWork.BeginTransaction())
             {
-                throw new AuthException { Errors = GetErrors(result.Errors) };
+                try
+                {
+                    var result = await _userManager.CreateAsync(user, password);
+                    if (!result.Succeeded)
+                        throw new AuthException { Errors = GetErrors(result.Errors) };
+
+                    var role = await CreateRoleIfNotExists(UserRoles.User);
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Role, role.Name),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim(ClaimTypes.Name, user.UserName)
+                    };
+
+                    var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+                    if (!userClaimsResult.Succeeded)
+                        throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
+
+                    transaction.Commit();
+
+                    return user.Id;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
-
-            var role = await CreateRoleIfNotExists(UserRoles.User);
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Role, role.Name),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
-            };
-
-            var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
-            if (!userClaimsResult.Succeeded)
-            {
-                throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
-            }
-
-            return user.Id;
         }
 
         private IEnumerable<ErrorResult> GetErrors(IEnumerable<IdentityError> errors)
@@ -143,9 +148,7 @@ namespace Cmt.Bll.Services
             var newRole = new CmtIdentityRole { Name = roleName };
             var roleResult = await _roleManager.CreateAsync(newRole);
             if (!roleResult.Succeeded)
-            {
                 throw new AuthException { Errors = GetErrors(roleResult.Errors) };
-            }
 
             return newRole;
         }

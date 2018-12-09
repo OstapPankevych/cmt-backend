@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Data;
-using System.Threading.Tasks;
 using Cmt.Dal.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cmt.Dal.Ef.Repositories
 {
-    public class UnitOfWork: IUnitOfWork
+    public class UnitOfWork<T>: IUnitOfWork, IDisposable
+        where T: DbContext
     {
         private bool disposed;
-        private readonly CmtContext _cmtContext;
+        protected readonly T DbContext;
 
-        public UnitOfWork(CmtContext cmtContext)
+        public UnitOfWork(T dbContext)
         {
-            _cmtContext = cmtContext;
+            DbContext = dbContext;
         }
-
-        public Task<int> SaveAsync() => _cmtContext.SaveChangesAsync();
-
-        public void Save() => _cmtContext.SaveChanges();
 
         public virtual void Dispose(bool disposing)
         {
             if (disposed) return;
             if (disposing)
             {
-                _cmtContext.Dispose();
+                DbContext.Dispose();
             }
             disposed = true;
         }
@@ -33,6 +29,11 @@ namespace Cmt.Dal.Ef.Repositories
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public IDbTransaction BeginTransaction()
+        {
+            return new DbTransaction(DbContext.Database.BeginTransaction());
         }
     }
 }

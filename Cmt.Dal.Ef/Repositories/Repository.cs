@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Cmt.Dal.Entities;
 using Cmt.Dal.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,43 +17,38 @@ namespace Cmt.Dal.Ef.Repositories
             DbSet = DbContext.Set<T>();
         }
 
-        public virtual async Task<U> CreateAsync(T entity)
+        public IQueryable<T> GetAll()
         {
-            DbContext.Add(entity);
-            await DbContext.SaveChangesAsync();
-
-            return entity.Id;
+            return DbContext.Set<T>();
         }
 
-        public virtual Task<T> GetAsync(U id)
+        public virtual async Task<T> GetAsync(U id)
         {
-            return DbContext.FindAsync<T>(id);
+            return await DbContext.FindAsync<T>(id);
         }
 
-        public virtual void Add(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             DbSet.Add(entity);
+
+            await DbContext.SaveChangesAsync();
         }
 
-        public virtual void Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             DbSet.Attach(entity);
             DbContext.Entry(entity).State = EntityState.Modified;
+
+            await DbContext.SaveChangesAsync();
         }
 
-        public virtual void Remove(U id)
+        public virtual async Task RemoveAsync(U id)
         {
-            var entity = DbSet.Find(id);
-            Remove(entity);
-        }
+            var entity = await DbSet.FindAsync(id);
+            DbSet.Attach(entity);
+            DbContext.Entry(entity).State = EntityState.Deleted;
 
-        public virtual void Remove(T entity)
-        {
-            if (DbContext.Entry(entity).State == EntityState.Detached)
-            {
-                DbSet.Attach(entity);
-            }
-            DbSet.Remove(entity);
+            await DbContext.SaveChangesAsync();
         }
     }
 }

@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cmt.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class CoursesController : Controller
+    public class CourseController : Controller
     {
         private readonly ICoursesService _courseService;
         private readonly IMapper _mapper;
 
-        public CoursesController(ICoursesService coursesService, IMapper mapper)
+        public CourseController(ICoursesService coursesService, IMapper mapper)
         {
             _courseService = coursesService;
             _mapper = mapper;
@@ -25,7 +25,7 @@ namespace Cmt.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [JwtAuthorize(Roles = UserRoles.User)]
+        //[JwtAuthorize(Roles = UserRoles.User)]
         public async Task<IActionResult> GetAsync(int id)
         {
             var course = await _courseService.GetAsync(id);
