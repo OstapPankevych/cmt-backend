@@ -25,7 +25,7 @@ namespace Cmt.WebApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [JwtAuthorize(Roles = UserRoles.Admin)]
+        [JwtAuthorize(Roles = UserRoles.User)]
         public async Task<IActionResult> GetAsync(int id)
         {
             var course = await _courseService.GetAsync(id);

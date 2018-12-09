@@ -10,6 +10,6 @@ namespace Cmt.Dal.Ef
         {
         }
 
-        public DbSet<CourseEntity> Courses { get; set; }
+        public DbSet<CourseEntity> Course { get; set; }
     }
 }
