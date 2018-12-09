@@ -37,15 +37,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
         {
             services.AddScoped<IUnitOfWork, UnitOfWork<CmtContext>>();
             services.AddScoped<UnitOfWork<CmtIdentityContext>>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
 
-            services.AddTransient<IAuthService, AuthService>(
-                provider => new AuthService(
-                    provider.GetService<UnitOfWork<CmtIdentityContext>>(),
-                    provider.GetService<SignInManager<CmtIdentityUser>>(),
-                    provider.GetService<UserManager<CmtIdentityUser>>(),
-                    provider.GetService<RoleManager<CmtIdentityRole>>(),
-                    provider.GetService<AuthSettings>()));
+            services.AddScoped<ICourseRepository, CourseRepository>();
         }
     }
 }

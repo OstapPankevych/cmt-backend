@@ -14,6 +14,14 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
         public static void ConfigureBllServices(this IServiceCollection services)
         {
             services.AddTransient<ICoursesService, CoursesService>();
+
+            services.AddTransient<IAuthService, AuthService>(
+               provider => new AuthService(
+                   provider.GetService<UnitOfWork<CmtIdentityContext>>(),
+                   provider.GetService<SignInManager<CmtIdentityUser>>(),
+                   provider.GetService<UserManager<CmtIdentityUser>>(),
+                   provider.GetService<RoleManager<CmtIdentityRole>>(),
+                   provider.GetService<AuthSettings>()));
         }
     }
 }
