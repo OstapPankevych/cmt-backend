@@ -5,7 +5,7 @@ namespace Cmt.WebApi.Infrastructure.Filters
 {
     public class JwtAuthorizeAttribute: AuthorizeAttribute
     {
-        public new string AuthenticationSchemes => AuthenticationSchemes;
+        public new string AuthenticationSchemes => base.AuthenticationSchemes;
 
         public JwtAuthorizeAttribute()
             : this(null)
