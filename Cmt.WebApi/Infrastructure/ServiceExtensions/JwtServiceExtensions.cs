@@ -1,8 +1,9 @@
 ﻿using System.Security.Claims;
-using System.Threading.Tasks;
 using Cmt.Common.Helpers;
+using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Course;
+using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Courses.Handlers;
+using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,13 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 
             services
-                .AddAuthorization()
+                .AddAuthorization(opts => {
+                    opts.AddPolicy(Policies.CourseOwner, policy => {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireClaim(ClaimTypes.NameIdentifier);
+                        policy.AddRequirements(new CourseOwnerAuthRequirement());
+                    });
+                })
                 .AddAuthentication()
                 .AddJwtBearer(x =>
                 {
@@ -33,6 +40,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                         ValidateLifetime = true
                     };
                 });
+
+            services.AddTransient<IAuthorizationHandler, CourseOwnerAuthHandler>();
         }
 
         public static void UseJwt(this IApplicationBuilder app)

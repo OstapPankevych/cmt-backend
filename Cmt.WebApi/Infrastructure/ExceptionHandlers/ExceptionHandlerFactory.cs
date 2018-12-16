@@ -17,7 +17,7 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
             _authExceptionHandler = authExceptionHandler;
         }
 
-        public HttpException Create(Exception ex)
+        public HttpError Create(Exception ex)
         {
             return ex is AuthException 
                 ? _authExceptionHandler.Handle((AuthException)ex) 

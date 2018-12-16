@@ -17,6 +17,11 @@
     <Folder Include="Infrastructure\ExceptionHandlers\" />
     <Folder Include="Infrastructure\Configuration\" />
     <Folder Include="Infrastructure\Constants\" />
+    <Folder Include="Infrastructure\AuthrorizationRequirements\" />
+    <Folder Include="Infrastructure\AuthrorizationRequirements\Courses\" />
+    <Folder Include="Infrastructure\AuthrorizationRequirements\Courses\Handlers\" />
+    <Folder Include="Infrastructure\Attributes\" />
+    <Folder Include="Infrastructure\ActionResults\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +49,7 @@
     <Compile Remove="Filters\ModelValidationAsyncActionFilter.cs" />
     <Compile Remove="ActionHandlers\ResponseFactories.cs" />
     <Compile Remove="ActionResults\InvalidModelState.cs" />
+    <Compile Remove="Infrastructure\Filters\TestActionFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

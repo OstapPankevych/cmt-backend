@@ -1,5 +1,7 @@
 ﻿using System;
+using AutoMapper;
 using Cmt.Bll.Services.Exceptions;
+using Cmt.Common.DTOs;
 using Cmt.Dal.Entities;
 using Cmt.Dal.Interfaces.Repositories;
 
@@ -8,32 +10,34 @@ namespace Cmt.Bll.Services
     public abstract class Service
     {
         protected readonly IUnitOfWork UnitOfWork;
+        private readonly IMapper Mapper;
 
-        protected Service(IUnitOfWork unitOfWork)
+        protected Service(IMapper mapper, IUnitOfWork unitOfWork)
         {
+            Mapper = mapper;
             UnitOfWork = unitOfWork;
         }
 
-        protected void Create<U>(Entity<U> entity)
+        protected void Create<TId>(Dto<TId> dto)
         {
-            entity.CreatedAt = DateTime.UtcNow;
-            entity.UpdatedAt = DateTime.UtcNow;
+            dto.CreatedAt = DateTime.UtcNow;
+            dto.UpdatedAt = DateTime.UtcNow;
         }
 
-        protected void Update<U>(
-            Entity<U> entity,
-            int updatedBy,
-            DateTime unmodifiedSince)
+        protected void Update<TId>(
+            Dto<TId> dto,
+            Entity<TId> dbEntity,
+            DateTime? lastModified)
         {
-            if (entity == null)
+            if (dbEntity == null)
                 throw new CmtException(ErrorCodes.NotFound);
 
-            if (unmodifiedSince < entity.UpdatedAt)
-                throw new CmtException(ErrorCodes.UnmodifiedSince);
+            if (!lastModified.HasValue || lastModified < dbEntity.UpdatedAt)
+                throw new CmtException(ErrorCodes.LastModified);
 
-            entity.CreatedAt = entity.CreatedAt;
-            entity.UpdatedAt = DateTime.UtcNow;
-            entity.UpdatedBy = updatedBy;
+            dto.CreatedAt = dbEntity.CreatedAt;
+            dto.UpdatedAt = DateTime.UtcNow;
+            dto.UpdatedBy = 11;
         }
     }
 }

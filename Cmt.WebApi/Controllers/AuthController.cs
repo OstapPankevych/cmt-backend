@@ -2,13 +2,15 @@
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Dal.Entities.Identities;
+using Cmt.WebApi.Infrastructure.Attributes;
 using Cmt.WebApi.Models.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cmt.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthController: Controller
+    public class AuthController : Controller
     {
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
@@ -36,16 +38,17 @@ namespace Cmt.WebApi.Controllers
             var user = Mapper.Map<CmtIdentityUser>(model);
             var id = await _authService.CreateAsync(user, model.Password);
 
-            return Ok(id);
+            return StatusCode(StatusCodes.Status201Created, new { id });
         }
 
         [HttpGet]
         [Route("SignOut")]
+        [JwtAuthorize]
         public async Task<IActionResult> SignOutAsync()
         {
             await _authService.SignOutAsync();
 
-            return Ok();
+            return StatusCode(StatusCodes.Status204NoContent); ;
         }
     }
 }

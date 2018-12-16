@@ -4,6 +4,6 @@
     {
         public static string Unknown = "Unknown";
         public static string NotFound = "NotFound";
-        public static string UnmodifiedSince = "UnmodifiedSince";
+        public static string LastModified = "LastModified";
     }
 }

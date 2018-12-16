@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Common.DTOs.Courses;
@@ -9,35 +10,47 @@ namespace Cmt.Bll.Services
 {
     public class CoursesService: Service, ICoursesService
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ICourseRepository _courseRepository;
 
         public CoursesService(
             IMapper mapper,
             IUnitOfWork unitOfWork,
             ICourseRepository courseRepository)
-            : base (unitOfWork)
+            : base (mapper, unitOfWork)
         {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
             _courseRepository = courseRepository;
-        }
-
-        public async Task<int> CreateAsync(CourseDto course)
-        {
-            var entity = _mapper.Map<CourseEntity>(course);
-            await _courseRepository.AddAsync(entity);
-
-            return entity.Id;
         }
 
         public async Task<CourseDto> GetAsync(int id)
         {
             var entity = await _courseRepository.GetAsync(id);
-            var dto = _mapper.Map<CourseDto>(entity);
+            var dto = Mapper.Map<CourseDto>(entity);
 
             return dto;
+        }
+
+        public async Task<int> CreateAsync(CourseDto dto)
+        {
+            Create(dto);
+            var entity = Mapper.Map<CourseEntity>(dto);
+            await _courseRepository.AddAsync(entity);
+
+            return entity.Id;
+        }
+
+        public async Task UpdateAsync(CourseDto dto, DateTime lastModified)
+        {
+            var dbEntity = await _courseRepository.GetAsync(dto.Id);
+            Update(dto, dbEntity, lastModified);
+
+            if (dto.Name != null) dbEntity.Name = dto.Name;
+
+            await _courseRepository.AddAsync(dbEntity);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _courseRepository.GetAsync(id);
         }
     }
 }

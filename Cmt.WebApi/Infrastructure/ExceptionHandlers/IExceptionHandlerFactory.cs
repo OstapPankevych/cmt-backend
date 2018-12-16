@@ -3,6 +3,6 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
 {
     public interface IExceptionHandlerFactory
     {
-        HttpException Create(Exception ex);
+        HttpError Create(Exception ex);
     }
 }

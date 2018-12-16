@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Cmt.WebApi.Infrastructure.ExceptionHandlers;
+using Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers;
 using Cmt.WebApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 
@@ -8,27 +8,27 @@ namespace Cmt.WebApi.Infrastructure.Middleware
 {
     public class ExceptionHandlingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly IExceptionHandlerFactory _exceptionHandlerFactory;
+        private readonly RequestDelegate _next;
+        private readonly IExceptionHandler<Exception> _exceptionHandler;
 
         public ExceptionHandlingMiddleware(
             RequestDelegate next,
-            IExceptionHandlerFactory exceptionHandlerFactory)
+            IExceptionHandler<Exception> exceptionHandler)
         {
-            this.next = next;
-            _exceptionHandlerFactory = exceptionHandlerFactory;
+            _next = next;
+            _exceptionHandler = exceptionHandler;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await next(context);
+                await _next(context);
             }
             catch (Exception ex)
             {
-                var httpException = _exceptionHandlerFactory.Create(ex);
-                await context.Response.WriteHttpExceptionAsync(httpException);
+                var httpError = _exceptionHandler.Handle(ex);
+                await context.Response.WriteHttpErrorAsync(httpError);
             }
         }
     }

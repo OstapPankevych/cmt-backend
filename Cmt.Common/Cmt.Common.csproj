@@ -12,6 +12,7 @@
     <Compile Remove="Identity\CmtIdentityRole.cs" />
     <Compile Remove="Identity\UserRoles.cs" />
     <Compile Remove="MapperProfile.cs" />
+    <Compile Remove="DTOs\Courses\CourseTypeDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />

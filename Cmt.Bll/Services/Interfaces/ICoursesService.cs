@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using Cmt.Common.DTOs.Courses;
+﻿using Cmt.Common.DTOs.Courses;
 
 namespace Cmt.Bll.Services.Interfaces
 {
-    public interface ICoursesService
+    public interface ICoursesService: IService<CourseDto, int>
     {
-        Task<int> CreateAsync(CourseDto course);
-        Task<CourseDto> GetAsync(int id);
     }
 }

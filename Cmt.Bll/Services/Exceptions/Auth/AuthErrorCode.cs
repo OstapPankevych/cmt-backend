@@ -1,6 +1,6 @@
 ﻿namespace Cmt.Bll.Services.Exceptions.Auth
 {
-    public static class AuthErrorCode
+    public static class AuthErrorCodes
     {
         public static string LockedOut = "LockedOut";
         public static string NotAllowed = "NotAllowed";

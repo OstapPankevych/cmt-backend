@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace Cmt.Dal.Interfaces.Repositories
 {
-    public interface IRepository<T, U>
+    public interface IRepository<TEntity, TId>
     {
-        IQueryable<T> GetAll();
+        IQueryable<TEntity> GetAll();
 
-        Task<T> GetAsync(U id);
-        Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task RemoveAsync(U id);
+        Task<TEntity> GetAsync(TId id);
+        Task AddAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task RemoveAsync(TId id);
     }
 }

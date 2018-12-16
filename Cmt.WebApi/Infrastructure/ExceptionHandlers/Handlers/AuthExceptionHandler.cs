@@ -1,57 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Microsoft.AspNetCore.Http;
 
 namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
 {
-    public class AuthExceptionHandler : IExceptionHandler<AuthException>
+    public class AuthExceptionHandler :
+        ExceptionHandler, IExceptionHandler<AuthException>
     {
-        public HttpException Handle(AuthException ex)
+        public HttpError Handle(AuthException ex)
         {
             var badRequest = new List<string>
             {
-                AuthErrorCode.DuplicateEmail,
-                AuthErrorCode.DuplicateUserName,
-                AuthErrorCode.InvalidEmail,
-                AuthErrorCode.InvalidUserName,
-                AuthErrorCode.PasswordMismatch,
-                AuthErrorCode.LoginAlreadyAssociated,
-                AuthErrorCode.PasswordRequiresDigit,
-                AuthErrorCode.PasswordTooShort,
-                AuthErrorCode.PasswordRequiresDigit,
-                AuthErrorCode.PasswordRequiresLower,
-                AuthErrorCode.PasswordRequiresUpper,
-                AuthErrorCode.PasswordRequiresNonAlphanumeric,
-                AuthErrorCode.WrongLoginOrPassword
+                AuthErrorCodes.DuplicateEmail,
+                AuthErrorCodes.DuplicateUserName,
+                AuthErrorCodes.InvalidEmail,
+                AuthErrorCodes.InvalidUserName,
+                AuthErrorCodes.PasswordMismatch,
+                AuthErrorCodes.LoginAlreadyAssociated,
+                AuthErrorCodes.PasswordRequiresDigit,
+                AuthErrorCodes.PasswordTooShort,
+                AuthErrorCodes.PasswordRequiresDigit,
+                AuthErrorCodes.PasswordRequiresLower,
+                AuthErrorCodes.PasswordRequiresUpper,
+                AuthErrorCodes.PasswordRequiresNonAlphanumeric,
+                AuthErrorCodes.WrongLoginOrPassword
             };
 
-            if (ex.Errors.All(x => badRequest.Contains(x.Code)))
+            var errors = ex.Errors.Select(x => x.Code).ToList();
+
+            if (IsErrorsAllFrom(errors, badRequest))
             {
-                return new HttpException
+                return new HttpError
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
-                    Errors = ex.Errors.Select(x => x.Code)
+                    Errors = errors
                 };
             }
 
-            var forbidden = new[]
+            var forbidden = new List<string>
             {
-                AuthErrorCode.NotAllowed,
-                AuthErrorCode.UserNotInRole
+                AuthErrorCodes.NotAllowed,
+                AuthErrorCodes.UserNotInRole
             };
 
-            return ex.Errors.All(x => forbidden.Contains(x.Code))
-                ? new HttpException
+            if (IsErrorsAllFrom(errors, forbidden))
+            {
+                return new HttpError
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
-                    Errors = ex.Errors.Select(x => x.Code)
-                }
-                : new HttpException
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
+                    Errors = errors
                 };
+            }
+
+            return base.Handle(ex);
+        }
+
+        private bool IsErrorsAllFrom(List<string> errros, List<string> from)
+        {
+            return errros.All(x => from.Contains(x));
         }
     }
 }

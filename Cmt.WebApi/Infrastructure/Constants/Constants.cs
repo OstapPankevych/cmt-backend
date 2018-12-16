@@ -1,5 +1,4 @@
-﻿using System;
-namespace Cmt.WebApi.Infrastructure.Constants
+﻿namespace Cmt.WebApi.Infrastructure.Constants
 {
     public static class WebApiConstants
     {

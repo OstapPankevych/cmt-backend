@@ -3,17 +3,14 @@ using System.Threading.Tasks;
 
 namespace Cmt.Bll.Services.Interfaces
 {
-    public interface IService<T, U>
+    public interface IService<TDto, TId>
     {
-        Task<U> CreateAsync(T dto);
+        Task<TId> CreateAsync(TDto entity);
 
-        Task<T> GetAsync(U id);
+        Task<TDto> GetAsync(TId id);
 
-        Task UpdateAsync(
-            T dto,
-            int updatedBy,
-            DateTime unmodifiedSince);
+        Task UpdateAsync(TDto dto, DateTime lastModified);
 
-        Task DeleteAsync(U id);
+        Task DeleteAsync(TId id);
     }
 }

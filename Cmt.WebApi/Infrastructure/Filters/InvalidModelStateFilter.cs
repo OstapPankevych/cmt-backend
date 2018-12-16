@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Cmt.WebApi.Infrastructure.ActionResults;
 using Cmt.WebApi.Infrastructure.ExceptionHandlers;
-using Cmt.WebApi.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Cmt.WebApi.Infrastructure.Filters
 {
-    public class InvalidModelStateFilterAttribute : IAsyncActionFilter
+    public class InvalidModelStateFilter : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(
             ActionExecutingContext context,
@@ -21,15 +21,15 @@ namespace Cmt.WebApi.Infrastructure.Filters
 
             var errors = context.ModelState
                 .Where(e => e.Value.Errors.Any())
-                .Select(e => e.Key);
+                .Select(e => e.Key)
+                .ToList();
 
-            var httpException = new HttpException 
+            var httpError = new HttpError 
             {
                 Errors = errors,
                 StatusCode = StatusCodes.Status400BadRequest
             };
-
-            await context.HttpContext.Response.WriteHttpExceptionAsync(httpException);
+            context.Result = new ErrorResult(httpError);
         }
     }
 }

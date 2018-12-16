@@ -44,31 +44,39 @@ namespace Cmt.Bll.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.WrongLoginOrPassword) } };
+            {
+                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.WrongLoginOrPassword) } };
+            }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                if (result.IsLockedOut)
-                    throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.LockedOut) } };
+                var jwtToken = await GetJwtToken(user);
 
-                if (result.IsNotAllowed)
-                    throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.NotAllowed) } };
-
-                if (result.RequiresTwoFactor)
-                    throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.RequiresTwoFactor) } };
-
-                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCode.WrongLoginOrPassword) } };
+                return new UserDto
+                {
+                    Name = user.UserName,
+                    Jwt = jwtToken
+                };
             }
 
-            var jwtToken = await GetJwtToken(user);
-
-            return new UserDto
+            if (result.IsLockedOut)
             {
-                Name = user.UserName,
-                Jwt = jwtToken
-            };
+                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.LockedOut) } };
+            }
+
+            if (result.IsNotAllowed)
+            {
+                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.NotAllowed) } };
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.RequiresTwoFactor) } };
+            }
+            
+            throw new AuthException { Errors = new[] { new ErrorResult(ErrorCodes.Unknown) } };
         }
 
         public async Task SignOutAsync()
@@ -84,7 +92,9 @@ namespace Cmt.Bll.Services
                 {
                     var result = await _userManager.CreateAsync(user, password);
                     if (!result.Succeeded)
+                    {
                         throw new AuthException { Errors = GetErrors(result.Errors) };
+                    }
 
                     var role = await CreateRoleIfNotExists(UserRoles.User);
 
@@ -97,7 +107,9 @@ namespace Cmt.Bll.Services
 
                     var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
                     if (!userClaimsResult.Succeeded)
+                    {
                         throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
+                    }
 
                     transaction.Commit();
 
@@ -143,12 +155,17 @@ namespace Cmt.Bll.Services
         private async Task<CmtIdentityRole> CreateRoleIfNotExists(string roleName)
         {
             var role = await _roleManager.FindByNameAsync(roleName);
-            if (role != null) return role;
+            if (role != null)
+            {
+                return role;
+            }
 
             var newRole = new CmtIdentityRole { Name = roleName };
             var roleResult = await _roleManager.CreateAsync(newRole);
             if (!roleResult.Succeeded)
+            {
                 throw new AuthException { Errors = GetErrors(roleResult.Errors) };
+            }
 
             return newRole;
         }
