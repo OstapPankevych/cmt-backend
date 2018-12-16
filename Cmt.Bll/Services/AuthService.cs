@@ -9,17 +9,19 @@ using Cmt.Common.Settings;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Helpers;
-using Cmt.Common.DTOs.Users;
-using Cmt.Dal.Entities.Identities;
+using Cmt.Bll.DTOs.Users;
 using Microsoft.IdentityModel.Tokens;
 using Cmt.Common.Constants;
 using System.IdentityModel.Tokens.Jwt;
-using Cmt.Dal.Interfaces.Repositories;
+using AutoMapper;
+using Cmt.Dal.Identities;
+using Cmt.Dal.Interfaces;
 
 namespace Cmt.Bll.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<CmtIdentityUser> _signInManager;
         private readonly UserManager<CmtIdentityUser> _userManager;
@@ -27,12 +29,14 @@ namespace Cmt.Bll.Services
         private readonly AuthSettings _authSettings;
 
         public AuthService(
+            IMapper mapper,
             IUnitOfWork unitOfWork,
             SignInManager<CmtIdentityUser> signInManager,
             UserManager<CmtIdentityUser> userManager,
             RoleManager<CmtIdentityRole> roleManager,
             AuthSettings authSettings)
         {
+            _mapper = mapper;
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -52,13 +56,10 @@ namespace Cmt.Bll.Services
 
             if (result.Succeeded)
             {
-                var jwtToken = await GetJwtToken(user);
+                var res = _mapper.Map<UserDto>(user);
+                res.Jwt = await GetJwtToken(user); ;
 
-                return new UserDto
-                {
-                    Name = user.UserName,
-                    Jwt = jwtToken
-                };
+                return res;
             }
 
             if (result.IsLockedOut)
@@ -84,8 +85,9 @@ namespace Cmt.Bll.Services
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<int> CreateAsync(CmtIdentityUser user, string password)
+        public async Task<int> CreateAsync(UserDto userDto, string password)
         {
+            var user = _mapper.Map<CmtIdentityUser>(userDto);
             using (var transaction = _unitOfWork.BeginTransaction())
             {
                 try

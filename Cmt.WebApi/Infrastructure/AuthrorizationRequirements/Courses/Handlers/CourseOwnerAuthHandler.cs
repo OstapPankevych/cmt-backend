@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using Cmt.Common.DTOs.Courses;
+using Cmt.Bll.DTOs.Courses;
 using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Course;
 using Microsoft.AspNetCore.Authorization;
 

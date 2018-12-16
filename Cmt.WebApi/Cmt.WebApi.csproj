@@ -40,7 +40,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Cmt.Bll\Cmt.Bll.csproj" />
     <ProjectReference Include="..\Cmt.Common\Cmt.Common.csproj" />
-    <ProjectReference Include="..\Cmt.Dal.Ef\Cmt.Dal.Ef.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Configuration\Configuration.cs" />

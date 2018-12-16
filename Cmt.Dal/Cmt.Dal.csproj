@@ -8,12 +8,13 @@
     <Folder Include="Interfaces\" />
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Entities\" />
-    <Folder Include="Entities\Identities\" />
+    <Folder Include="Identities\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Interfaces\Identities\Managers\ISignInManager.cs" />
+    <Compile Remove="Identities\Managers\CmtUserManager.cs" />
   </ItemGroup>
 </Project>

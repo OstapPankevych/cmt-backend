@@ -1,4 +1,4 @@
-﻿using Cmt.Common.DTOs.Courses;
+﻿using Cmt.Bll.DTOs.Courses;
 
 namespace Cmt.Bll.Services.Interfaces
 {

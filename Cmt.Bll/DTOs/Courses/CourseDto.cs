@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cmt.Common.DTOs.Courses
+namespace Cmt.Bll.DTOs.Courses
 {
     public class CourseDto: Dto<int>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Cmt.Common.DTOs.Users;
-using Cmt.Dal.Entities.Identities;
+using Cmt.Bll.DTOs.Users;
+using Cmt.Dal.Identities;
 
 namespace Cmt.Bll.Services.Interfaces
 {
@@ -8,6 +8,6 @@ namespace Cmt.Bll.Services.Interfaces
     {
         Task<UserDto> SignInAsync(string email, string password);
         Task SignOutAsync();
-        Task<int> CreateAsync(CmtIdentityUser user, string password);
+        Task<int> CreateAsync(UserDto user, string password);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Dal.Entities.Identities;
+using Cmt.Bll.DTOs.Users;
 using Cmt.WebApi.Infrastructure.Attributes;
 using Cmt.WebApi.Models.Users;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +35,7 @@ namespace Cmt.WebApi.Controllers
         [Route("Registry")]
         public async Task<IActionResult> RegistryAsync([FromBody] NewUser model)
         {
-            var user = Mapper.Map<CmtIdentityUser>(model);
+            var user = Mapper.Map<UserDto>(model);
             var id = await _authService.CreateAsync(user, model.Password);
 
             return StatusCode(StatusCodes.Status201Created, new { id });

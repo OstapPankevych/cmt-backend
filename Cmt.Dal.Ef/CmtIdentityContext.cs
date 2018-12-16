@@ -1,4 +1,4 @@
-﻿using Cmt.Dal.Entities.Identities;
+﻿using Cmt.Dal.Identities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

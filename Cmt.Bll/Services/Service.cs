@@ -1,9 +1,9 @@
 ﻿using System;
 using AutoMapper;
 using Cmt.Bll.Services.Exceptions;
-using Cmt.Common.DTOs;
+using Cmt.Bll.DTOs;
 using Cmt.Dal.Entities;
-using Cmt.Dal.Interfaces.Repositories;
+using Cmt.Dal.Interfaces;
 
 namespace Cmt.Bll.Services
 {

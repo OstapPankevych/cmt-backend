@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cmt.Common.DTOs.Users
+namespace Cmt.Bll.DTOs.Users
 {
     public class JwtDto
     {

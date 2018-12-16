@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cmt.Common.DTOs
+namespace Cmt.Bll.DTOs
 {
     public class Dto<TId>
     {

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Cmt.Common.DTOs.Courses;
-using Cmt.Common.DTOs.Users;
-using Cmt.Dal.Entities.Identities;
+using Cmt.Bll.DTOs.Courses;
+using Cmt.Bll.DTOs.Users;
 using Cmt.WebApi.Models;
 using Cmt.WebApi.Models.Users;
 
@@ -11,13 +10,10 @@ namespace Cmt.WebApi.Infrastructure
     {
         public WebApiMappingProfile()
         {
-            CreateMap<CourseModel, CourseDto>();
-            CreateMap<CourseDto, CourseModel>();
+            CreateMap<CourseModel, CourseDto>()
+                .ReverseMap();
 
-            CreateMap<NewUser, CmtIdentityUser>()
-                .ForMember(dest => dest.UserName,
-                    opts => opts.MapFrom(src => src.Name));
-
+            CreateMap<NewUser, UserDto>();
             CreateMap<User, UserDto>();
             CreateMap<Jwt, JwtDto>();
         }

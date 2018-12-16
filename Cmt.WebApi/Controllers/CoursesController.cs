@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.DTOs.Courses;
+using Cmt.Bll.DTOs.Courses;
 using Cmt.WebApi.Infrastructure.Attributes;
 using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Http;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Cmt.Dal.Interfaces;
 using Cmt.Dal.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
