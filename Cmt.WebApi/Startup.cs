@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Cmt.WebApi.Infrastructure.ServiceExtensions;
 using Cmt.WebApi.Infrastructure.Filters;
 using Cmt.WebApi.Infrastructure.Attributes;
+using Microsoft.AspNetCore.Http;
 
 namespace Cmt.WebApi
 {
@@ -73,7 +74,6 @@ namespace Cmt.WebApi
         private void ConfigureCommon(IApplicationBuilder app)
         {
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
-            app.UseStatusCodePagesWithReExecute("api/error/{0}");
 
             app.UseCors(x => x
                .AllowAnyOrigin()

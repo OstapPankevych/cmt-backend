@@ -38,6 +38,7 @@ namespace Cmt.WebApi.Controllers
             var user = Mapper.Map<UserDto>(model);
             var id = await _authService.CreateAsync(user, model.Password);
             var userModel = new User { Id = id };
+
             return Created(CreateResponse(userModel, null));
         }
 
