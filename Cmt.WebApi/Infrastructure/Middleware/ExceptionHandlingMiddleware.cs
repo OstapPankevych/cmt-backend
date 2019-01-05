@@ -28,7 +28,7 @@ namespace Cmt.WebApi.Infrastructure.Middleware
             catch (Exception ex)
             {
                 var httpError = _exceptionHandler.Handle(ex);
-                await context.Response.WriteHttpErrorAsync(httpError);
+                await context.WriteErrorAsync(httpError);
             }
         }
     }

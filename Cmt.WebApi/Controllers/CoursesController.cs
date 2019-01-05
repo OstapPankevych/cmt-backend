@@ -1,27 +1,30 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Bll.DTOs.Courses;
 using Cmt.WebApi.Infrastructure.Attributes;
-using Cmt.WebApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Cmt.WebApi.Infrastructure.Constants;
+using Cmt.WebApi.Models.Courses;
 
 namespace Cmt.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class CourseController : Controller
+    public class CourseController : CmtController
     {
         private readonly IMapper _mapper;
         private readonly ICoursesService _courseService;
+        private readonly IAuthorizationService _authorizationService;
 
         public CourseController(
             IMapper mapper,
-            ICoursesService coursesService)
+            ICoursesService coursesService,
+            IAuthorizationService authorizationService)
         {
             _mapper = mapper;
             _courseService = coursesService;
+            _authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -29,30 +32,46 @@ namespace Cmt.WebApi.Controllers
         public async Task<IActionResult> GetAsync(int id)
         {
             var course = await _courseService.GetAsync(id);
-            if (course == null) return NotFound();
+            if (course == null)
+            {
+                return NotFound();
+            }
 
-            var model = Mapper.Map<CourseModel>(course);
-            return Ok(model);
+            var model = Mapper.Map<Course>(course);
+            return Ok(new CourseResponse { Course = model });
         }
 
         [HttpPost]
         [JwtAuthorize]
-        public async Task<IActionResult> PostAsync([FromBody] CourseModel model)
+        public async Task<IActionResult> PostAsync([FromBody] Course model)
         {
             var course = Mapper.Map<CourseDto>(model);
             var id = await _courseService.CreateAsync(course);
 
-            return StatusCode(StatusCodes.Status201Created, Json(new { id }));
+            return Created(CreateResponse(new Course { Id = id }));
         }
 
         [HttpPut]
-        [JwtAuthorize]
-        public async Task<IActionResult> PutAsync([FromBody] CourseModel model)
+        [JwtAuthorize(Policy = Policies.CourseOwner)]
+        public async Task<IActionResult> PutAsync([FromBody] Course model)
         {
-            var course = Mapper.Map<CourseDto>(model);
-            await _courseService.UpdateAsync(course, new DateTime());
+            var cource = await _courseService.GetAsync(model.Id);
+            var isOwner = await _authorizationService.AuthorizeAsync(
+                User, cource, Policies.CourseOwner);
 
-            return StatusCode(StatusCodes.Status204NoContent);
+            if (!isOwner.Succeeded)
+            {
+                return Forbid();
+            }
+
+            var course = Mapper.Map<CourseDto>(model);
+
+            course.UpdatedBy = GetCurrentUserId();
+            course.UpdatedAt = GetLastModifiedUtcHeader();
+
+            await _courseService.UpdateAsync(course);
+
+            return NoContent();
         }
 
         [HttpDelete]
@@ -62,7 +81,10 @@ namespace Cmt.WebApi.Controllers
         {
             await _courseService.DeleteAsync(id);
 
-            return StatusCode(StatusCodes.Status204NoContent);
+            return NoContent();
         }
+
+        private CourseResponse CreateResponse(Course course)
+            => new CourseResponse { Course = course };
     }
 }

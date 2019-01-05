@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Cmt.WebApi.Infrastructure.ServiceExtensions;
 using Cmt.WebApi.Infrastructure.Filters;
-using Microsoft.AspNetCore.Http;
+using Cmt.WebApi.Infrastructure.Attributes;
 
 namespace Cmt.WebApi
 {
@@ -65,7 +65,6 @@ namespace Cmt.WebApi
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(InvalidModelStateFilter));
-                options.Filters.Add(typeof(ExceptionFilter));
             });
 
             services.AddHttpContextAccessor();
@@ -74,6 +73,7 @@ namespace Cmt.WebApi
         private void ConfigureCommon(IApplicationBuilder app)
         {
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+            app.UseStatusCodePagesWithReExecute("api/error/{0}");
 
             app.UseCors(x => x
                .AllowAnyOrigin()

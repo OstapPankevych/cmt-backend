@@ -4,5 +4,6 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
     public interface IExceptionHandlerFactory
     {
         HttpError Create(Exception ex);
+        HttpError Create(int httpErrorCode);
     }
 }

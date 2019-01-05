@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Cmt.WebApi.Infrastructure.ActionResults;
+using Cmt.WebApi.ActionResults.Infrastructure;
 using Cmt.WebApi.Infrastructure.ExceptionHandlers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -29,7 +29,7 @@ namespace Cmt.WebApi.Infrastructure.Filters
                 Errors = errors,
                 StatusCode = StatusCodes.Status400BadRequest
             };
-            context.Result = new ErrorResult(httpError);
+            context.Result = new CmtErrorResult(httpError);
         }
     }
 }

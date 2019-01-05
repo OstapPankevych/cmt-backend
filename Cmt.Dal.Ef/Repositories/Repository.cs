@@ -17,7 +17,7 @@ namespace Cmt.Dal.Ef.Repositories
             DbSet = DbContext.Set<T>();
         }
 
-        public IQueryable<T> GetAll()
+        protected IQueryable<T> GetAll()
         {
             return DbContext.Set<T>();
         }

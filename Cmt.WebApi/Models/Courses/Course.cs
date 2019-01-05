@@ -1,7 +1,7 @@
 ﻿using System;
-namespace Cmt.WebApi.Models
+namespace Cmt.WebApi.Models.Courses
 {
-    public class CourseModel
+    public class Course
     {
         public int Id { get; set; }
         public string Name { get; set; }

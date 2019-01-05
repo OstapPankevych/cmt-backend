@@ -22,6 +22,7 @@
     <Folder Include="Infrastructure\AuthrorizationRequirements\Courses\Handlers\" />
     <Folder Include="Infrastructure\Attributes\" />
     <Folder Include="Infrastructure\ActionResults\" />
+    <Folder Include="Models\Courses\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Bll.DTOs.Courses;
@@ -39,10 +38,10 @@ namespace Cmt.Bll.Services
             return entity.Id;
         }
 
-        public async Task UpdateAsync(CourseDto dto, DateTime lastModified)
+        public async Task UpdateAsync(CourseDto dto)
         {
             var dbEntity = await _courseRepository.GetAsync(dto.Id);
-            Update(dto, dbEntity, lastModified);
+            Update(dto, dbEntity, dto.UpdatedAt);
 
             if (dto.Name != null) dbEntity.Name = dto.Name;
 

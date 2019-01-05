@@ -9,11 +9,40 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
     {
         public HttpError Handle(Exception ex)
         {
-            // Logging...
+            return ex is CmtException
+                ? HandleCmtException((CmtException)ex)
+                : new HttpError
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Errors = new List<string> { CmtErrorCodes.Unknown }
+                    };
+        }
+
+        private HttpError HandleCmtException(CmtException cmtException)
+        {
+            int statusCode;
+            var code = cmtException.Error.Code;
+            switch (code)
+            {
+                case CmtErrorCodes.NotFound:
+                    statusCode = StatusCodes.Status404NotFound;
+                    break;
+                case CmtErrorCodes.LastModified:
+                    statusCode = StatusCodes.Status412PreconditionFailed;
+                    break;
+                default:
+                    statusCode = StatusCodes.Status500InternalServerError;
+                    break;
+            }
+
+            var errorCode = statusCode == StatusCodes.Status500InternalServerError
+                ? CmtErrorCodes.Unknown
+                : code;
+
             return new HttpError
             {
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Errors = new List<string> { ErrorCodes.Unknown }
+                StatusCode = statusCode,
+                Errors = new List<string> { errorCode }
             };
         }
     }

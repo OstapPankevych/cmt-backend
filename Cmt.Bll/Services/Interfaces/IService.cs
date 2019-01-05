@@ -9,7 +9,7 @@ namespace Cmt.Bll.Services.Interfaces
 
         Task<TDto> GetAsync(TId id);
 
-        Task UpdateAsync(TDto dto, DateTime lastModified);
+        Task UpdateAsync(TDto dto);
 
         Task DeleteAsync(TId id);
     }

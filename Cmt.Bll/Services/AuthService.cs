@@ -77,7 +77,7 @@ namespace Cmt.Bll.Services
                 throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.RequiresTwoFactor) } };
             }
             
-            throw new AuthException { Errors = new[] { new ErrorResult(ErrorCodes.Unknown) } };
+            throw new AuthException { Errors = new[] { new ErrorResult(CmtErrorCodes.Unknown) } };
         }
 
         public async Task SignOutAsync()

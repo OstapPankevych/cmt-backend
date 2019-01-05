@@ -2,6 +2,7 @@
 using Cmt.Bll.DTOs.Courses;
 using Cmt.Bll.DTOs.Users;
 using Cmt.WebApi.Models;
+using Cmt.WebApi.Models.Courses;
 using Cmt.WebApi.Models.Users;
 
 namespace Cmt.WebApi.Infrastructure
@@ -10,7 +11,7 @@ namespace Cmt.WebApi.Infrastructure
     {
         public WebApiMappingProfile()
         {
-            CreateMap<CourseModel, CourseDto>()
+            CreateMap<Course, CourseDto>()
                 .ReverseMap();
 
             CreateMap<NewUser, UserDto>();

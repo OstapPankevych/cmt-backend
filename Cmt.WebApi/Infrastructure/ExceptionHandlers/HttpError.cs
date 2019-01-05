@@ -6,10 +6,5 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
     {
         public int StatusCode { get; set; }
         public List<string> Errors { get; set; }
-
-        public object CreateBody()
-        {
-            return new { Errors };
-        }
     }
 }

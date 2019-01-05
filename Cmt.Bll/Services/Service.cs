@@ -30,10 +30,14 @@ namespace Cmt.Bll.Services
             DateTime? lastModified)
         {
             if (dbEntity == null)
-                throw new CmtException(ErrorCodes.NotFound);
+            {
+                throw new CmtException(CmtErrorCodes.NotFound);
+            }
 
             if (!lastModified.HasValue || lastModified < dbEntity.UpdatedAt)
-                throw new CmtException(ErrorCodes.LastModified);
+            {
+                throw new CmtException(CmtErrorCodes.LastModified);
+            }
 
             dto.CreatedAt = dbEntity.CreatedAt;
             dto.UpdatedAt = DateTime.UtcNow;

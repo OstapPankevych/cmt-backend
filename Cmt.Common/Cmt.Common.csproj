@@ -14,6 +14,7 @@
     <Compile Remove="MapperProfile.cs" />
     <Compile Remove="DTOs\Courses\CourseTypeDto.cs" />
     <Compile Remove="Extensions\AutoMapperExtensions.cs" />
+    <Compile Remove="Constants\CmtClaimTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
