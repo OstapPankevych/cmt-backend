@@ -11,13 +11,13 @@ using Cmt.WebApi.Models.Courses;
 namespace Cmt.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class CourseController : CmtController
+    public class CoursesController : CmtController
     {
         private readonly IMapper _mapper;
         private readonly ICoursesService _courseService;
         private readonly IAuthorizationService _authorizationService;
 
-        public CourseController(
+        public CoursesController(
             IMapper mapper,
             ICoursesService coursesService,
             IAuthorizationService authorizationService)

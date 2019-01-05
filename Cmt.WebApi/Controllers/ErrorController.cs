@@ -5,16 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cmt.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ErrorController : CmtController
+    public class ErrorsController : CmtController
     {
         private readonly IExceptionHandlerFactory _exceptionHandlerFactory;
 
-        public ErrorController(IExceptionHandlerFactory exceptionHandlerFactory)
+        public ErrorsController(IExceptionHandlerFactory exceptionHandlerFactory)
         {
             _exceptionHandlerFactory = exceptionHandlerFactory; 
         }
 
         [Route("{code}")]
+        [HttpGet]
         public IActionResult Error(int code)
         {
             var httpError = _exceptionHandlerFactory.Create(code);

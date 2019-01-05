@@ -9,23 +9,23 @@ namespace Cmt.WebApi.Controllers
 {
     public class CmtController: Controller
     {
-        public IActionResult Created(object obj)
+        protected IActionResult Created(object obj)
         {
             return StatusCode(StatusCodes.Status201Created, obj);
         }
 
-        public DateTime? GetLastModifiedUtcHeader()
+        protected DateTime? GetLastModifiedUtcHeader()
         {
             return Request.GetTypedHeaders().LastModified.Value.UtcDateTime;
         }
 
-        public string GetCurrentUserClaim(string claim)
+        protected string GetCurrentUserClaim(string claim)
         {
             return User
                 .FindFirst(x => x.Type == claim).Value;
         }
 
-        public int GetCurrentUserId()
+        protected int GetCurrentUserId()
         {
             var idString = GetCurrentUserClaim(ClaimTypes.NameIdentifier);
             if (!int.TryParse(idString, out var id))
