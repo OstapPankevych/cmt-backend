@@ -14,8 +14,8 @@ namespace Cmt.WebApi.Controllers
             _exceptionHandlerFactory = exceptionHandlerFactory; 
         }
 
-        [Route("{code}")]
         [HttpGet]
+        [Route("{code}")]
         public IActionResult Error(int code)
         {
             var httpError = _exceptionHandlerFactory.Create(code);
