@@ -10,6 +10,6 @@ namespace Cmt.Dal.Entities
         public T Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int UpdatedBy { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

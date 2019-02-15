@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using Cmt.Bll.Services.Exceptions;
+using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApiErrors = Cmt.WebApi.Infrastructure.ExceptionHandlers;
@@ -16,7 +19,15 @@ namespace Cmt.WebApi.Controllers
 
         protected DateTime? GetLastModifiedUtcHeader()
         {
-            return Request.GetTypedHeaders().LastModified.Value.UtcDateTime;
+            var lastModifiedHeader = Request.Headers["Last-Modified"];
+            if (DateTime.TryParse(lastModifiedHeader, 
+                CultureInfo.InvariantCulture, 
+                DateTimeStyles.AssumeUniversal, out var dateTime))
+            {
+                return dateTime;
+            }
+
+            return null;
         }
 
         protected string GetCurrentUserClaim(string claim)
@@ -35,5 +46,11 @@ namespace Cmt.WebApi.Controllers
 
             return id;
         }
+
+        protected SimpleResponse<TModel> CreateResponse<TModel>(TModel model)
+            => new SimpleResponse<TModel> { Data = model };
+
+        protected ArrayResponse<TModel> CreateResponse<TModel>(IList<TModel> models)
+            => new ArrayResponse<TModel> { Data = models };
     }
 }

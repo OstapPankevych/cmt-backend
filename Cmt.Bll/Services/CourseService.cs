@@ -5,6 +5,9 @@ using Cmt.Bll.DTOs.Courses;
 using Cmt.Dal.Entities;
 using Cmt.Dal.Interfaces;
 using Cmt.Dal.Interfaces.Repositories;
+using Cmt.Bll.Services.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Cmt.Bll.Services
 {
@@ -21,6 +24,14 @@ namespace Cmt.Bll.Services
             _courseRepository = courseRepository;
         }
 
+        public async Task<IList<CourseDto>> GetAsync()
+        {
+            var entities = await _courseRepository.GetAsync();
+            var dtos = Mapper.Map<IList<CourseDto>>(entities);
+
+            return dtos;
+        }
+
         public async Task<CourseDto> GetAsync(int id)
         {
             var entity = await _courseRepository.GetAsync(id);
@@ -31,8 +42,7 @@ namespace Cmt.Bll.Services
 
         public async Task<int> CreateAsync(CourseDto dto)
         {
-            Create(dto);
-            var entity = Mapper.Map<CourseEntity>(dto);
+            var entity = CreateEntity<int, CourseDto, CourseEntity>(dto);
             await _courseRepository.AddAsync(entity);
 
             return entity.Id;
@@ -41,11 +51,15 @@ namespace Cmt.Bll.Services
         public async Task UpdateAsync(CourseDto dto)
         {
             var dbEntity = await _courseRepository.GetAsync(dto.Id);
-            Update(dto, dbEntity, dto.UpdatedAt);
+            if (dbEntity == null)
+            {
+                throw new CmtException(CmtErrorCodes.NotFound);
+            }
 
-            if (dto.Name != null) dbEntity.Name = dto.Name;
+            CheckUpdatedAt(dto.UpdatedAt, dbEntity.UpdatedAt);
+            UpdateEntity<int, CourseDto, CourseEntity>(dto, dbEntity);
 
-            await _courseRepository.AddAsync(dbEntity);
+            await _courseRepository.UpdateAsync(dbEntity);
         }
 
         public async Task DeleteAsync(int id)

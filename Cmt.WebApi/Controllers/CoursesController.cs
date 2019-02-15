@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Models.Courses;
+using Cmt.WebApi.Models;
+using System.Collections.Generic;
 
 namespace Cmt.WebApi.Controllers
 {
@@ -28,6 +30,15 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            var courses = await _courseService.GetAsync();
+
+            var models = Mapper.Map<IList<Course>>(courses);
+            return Ok(CreateResponse(models));
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
@@ -38,7 +49,7 @@ namespace Cmt.WebApi.Controllers
             }
 
             var model = Mapper.Map<Course>(course);
-            return Ok(new CourseResponse { Course = model });
+            return Ok(CreateResponse(model));
         }
 
         [HttpPost]
@@ -46,18 +57,25 @@ namespace Cmt.WebApi.Controllers
         public async Task<IActionResult> PostAsync([FromBody] Course model)
         {
             var course = Mapper.Map<CourseDto>(model);
+            course.UpdatedBy = GetCurrentUserId();
             var id = await _courseService.CreateAsync(course);
 
             return Created(CreateResponse(new Course { Id = id }));
         }
 
         [HttpPut]
-        [JwtAuthorize(Policy = Policies.CourseOwner)]
-        public async Task<IActionResult> PutAsync([FromBody] Course model)
+        [JwtAuthorize]
+        [Route("{id}")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] Course model)
         {
-            var cource = await _courseService.GetAsync(model.Id);
+            var dbCource = await _courseService.GetAsync(id);
+            if (dbCource == null)
+            {
+                return NotFound();
+            }
+
             var isOwner = await _authorizationService.AuthorizeAsync(
-                User, cource, Policies.CourseOwner);
+                User, dbCource, Policies.CourseOwner);
 
             if (!isOwner.Succeeded)
             {
@@ -66,6 +84,7 @@ namespace Cmt.WebApi.Controllers
 
             var course = Mapper.Map<CourseDto>(model);
 
+            course.Id = id;
             course.UpdatedBy = GetCurrentUserId();
             course.UpdatedAt = GetLastModifiedUtcHeader();
 
@@ -83,8 +102,5 @@ namespace Cmt.WebApi.Controllers
 
             return NoContent();
         }
-
-        private CourseResponse CreateResponse(Course course)
-            => new CourseResponse { Course = course };
     }
 }

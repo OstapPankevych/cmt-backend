@@ -61,8 +61,6 @@ namespace Cmt.WebApi
             services.ConfigureEfRepositories();
             services.ConfigureMapper();
 
-            services.AddCors();
-
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(InvalidModelStateFilter));
@@ -74,12 +72,6 @@ namespace Cmt.WebApi
         private void ConfigureCommon(IApplicationBuilder app)
         {
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
-
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials());
 
             app.UseJwt();
             app.UseMvc();

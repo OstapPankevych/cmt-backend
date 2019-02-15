@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cmt.Bll.Services.Interfaces
@@ -8,6 +9,8 @@ namespace Cmt.Bll.Services.Interfaces
         Task<TId> CreateAsync(TDto entity);
 
         Task<TDto> GetAsync(TId id);
+
+        Task<IList<TDto>> GetAsync();
 
         Task UpdateAsync(TDto dto);
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Cmt.WebApi.Infrastructure.ServiceExtensions
 {
@@ -29,6 +30,8 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                 });
                 c.AddSecurityRequirement(security);
 
+                c.OperationFilter<LastModifiedFilter>();
+
             });
 
             return services;
@@ -43,6 +46,23 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
 
                 c.DocumentTitle = "Title Documentation";
             });
+        }
+
+        private class LastModifiedFilter : IOperationFilter
+        {
+            public void Apply(Operation operation, OperationFilterContext context)
+            {
+                if (operation.Parameters == null)
+                    operation.Parameters = new List<IParameter>();
+
+                operation.Parameters.Add(new NonBodyParameter
+                {
+                    Name = "Last-Modified",
+                    In = "header",
+                    Type = "string",
+                    Required = false
+                });
+            }
         }
     }
 }
