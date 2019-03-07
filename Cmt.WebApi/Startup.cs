@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Cmt.WebApi.Infrastructure.ServiceExtensions;
 using Cmt.WebApi.Infrastructure.Filters;
-using Cmt.WebApi.Infrastructure.Attributes;
-using Microsoft.AspNetCore.Http;
 
 namespace Cmt.WebApi
 {
