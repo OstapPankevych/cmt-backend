@@ -1,18 +1,14 @@
 ﻿using System;
-using Cmt.Dal.Ef;
-using Cmt.Dal.Identities;
-using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class IdentityServerServiceExtensions
     {
-        public static void ConfigureIdentityServer(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
         {
             var passwordSettings = ConfigurationsProvider.GetPasswordSettings(configuration);
             var lockoutSettings = ConfigurationsProvider.GetLockoutSettings(configuration);

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class SwaggerServiceExtensions
     {

@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class EfDbServiceExtension
     {
-        public static void ConfigureEfDb(
+        public static void AddEfDb(
             this IServiceCollection services,
             IConfiguration configuration)
         {
@@ -31,7 +31,7 @@ namespace Cmt.WebApi.Infrastructure.ServiceExtensions
                 .AddDefaultTokenProviders();
         }
 
-        public static void ConfigureEfRepositories(this IServiceCollection services)
+        public static void AddEfRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork<CmtContext>>();
             services.AddScoped<UnitOfWork<CmtIdentityContext>>();

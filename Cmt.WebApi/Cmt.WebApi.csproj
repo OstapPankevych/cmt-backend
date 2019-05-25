@@ -10,7 +10,6 @@
     <Folder Include="Models\Users\" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Infrastructure\Middleware\" />
-    <Folder Include="Infrastructure\ServiceExtensions\" />
     <Folder Include="Infrastructure\Filters\" />
     <Folder Include="Infrastructure\Providers\" />
     <Folder Include="Infrastructure\Extensions\" />
@@ -23,6 +22,7 @@
     <Folder Include="Infrastructure\Attributes\" />
     <Folder Include="Infrastructure\ActionResults\" />
     <Folder Include="Models\Courses\" />
+    <Folder Include="Infrastructure\Extensions\ServiceExtensions\" />
   </ItemGroup>
 
   <ItemGroup>

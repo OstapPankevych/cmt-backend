@@ -10,11 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class JwtServiceExtensions
     {
-        public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
+        public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = ConfigurationsProvider.GetJwtSettings(configuration);
 

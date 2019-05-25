@@ -8,11 +8,11 @@ using Cmt.Dal.Identities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class BllServiceExtensions
     {
-        public static void ConfigureBllServices(this IServiceCollection services)
+        public static void AddBll(this IServiceCollection services)
         {
             services.AddTransient<ICoursesService, CoursesService>();
             services.AddTransient<ISecurityService, SecurityService>();

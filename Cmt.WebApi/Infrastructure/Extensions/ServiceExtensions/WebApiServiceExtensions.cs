@@ -7,11 +7,11 @@ using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cmt.WebApi.Infrastructure.ServiceExtensions
+namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class WebApiServiceExtensions
     {
-        public static void ConfigureWebApiServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddWebApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IExceptionHandlerFactory, ExceptionHandlerFactory>();
             services.AddTransient<IExceptionHandler<Exception>, ExceptionHandler>();

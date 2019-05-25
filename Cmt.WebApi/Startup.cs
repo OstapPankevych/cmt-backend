@@ -3,14 +3,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Cmt.WebApi.Infrastructure.ServiceExtensions;
 using Cmt.WebApi.Infrastructure.Filters;
+using Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions;
 
 namespace Cmt.WebApi
 {
     public class Startup
     {
         private readonly IHostingEnvironment _env;
+
+        public IConfiguration Configuration { get; }
 
         public Startup(
             IConfiguration configuration,
@@ -20,44 +22,44 @@ namespace Cmt.WebApi
             _env = env;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureCommonServices(services);
+            AddCommonServices(services);
+            AddEnvServices(services);
+        }
 
+        public void Configure(IApplicationBuilder app)
+        {
+            UseCommonServices(app);
+            UseEnvRequestServices(app);
+        }
+
+        private void UseCommonServices(IApplicationBuilder app)
+        {
+            app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+
+            app.UseJwt();
+            app.UseMvc();
+        }
+
+        private void AddEnvServices(IServiceCollection services)
+        {
             if (_env.IsDevelopment() || _env.IsStaging())
             {
                 services.AddSwaggerDocumentation();
             }
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        private void AddCommonServices(IServiceCollection services)
         {
-            ConfigureCommon(app);
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            if (env.IsDevelopment() || env.IsStaging())
-            {
-                app.UseSwaggerDocumentation();
-            }
-        }
-
-        private void ConfigureCommonServices(IServiceCollection services)
-        {
-            services.ConfigureBllServices();
-            services.ConfigureWebApiServices(Configuration);
-            services.ConfigureIdentityServer(Configuration);
-            services.ConfigureJwt(Configuration);
-            services.ConfigureEfDb(Configuration);
-            services.ConfigureEfRepositories();
-            services.ConfigureMapper();
+            services.AddLogging(Configuration.GetSection("Logging"));
+            services.AddBll();
+            services.AddWebApi(Configuration);
+            services.AddIdentity(Configuration);
+            services.AddJwt(Configuration);
+            services.AddEfDb(Configuration);
+            services.AddEfRepositories();
+            services.AddMapper();
 
             services.AddMvc(options =>
             {
@@ -67,12 +69,18 @@ namespace Cmt.WebApi
             services.AddHttpContextAccessor();
         }
 
-        private void ConfigureCommon(IApplicationBuilder app)
+        private void UseEnvRequestServices(
+            IApplicationBuilder app)
         {
-            app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+            if (_env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-            app.UseJwt();
-            app.UseMvc();
+            if (_env.IsDevelopment() || _env.IsStaging())
+            {
+                app.UseSwaggerDocumentation();
+            }
         }
     }
 }

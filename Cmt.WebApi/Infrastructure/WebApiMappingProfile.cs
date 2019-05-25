@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Cmt.Bll.DTOs.Courses;
 using Cmt.Bll.DTOs.Users;
-using Cmt.WebApi.Models;
 using Cmt.WebApi.Models.Courses;
 using Cmt.WebApi.Models.Users;
 
