@@ -2,12 +2,17 @@
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
 {
     public class AuthExceptionHandler :
         ExceptionHandler, IExceptionHandler<AuthException>
     {
+        public AuthExceptionHandler(ILogger<AuthExceptionHandler> logger)
+            : base(logger) 
+        { }
+
         public HttpError Handle(AuthException ex)
         {
             var badRequest = new List<string>
@@ -27,30 +32,28 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
                 AuthErrorCodes.WrongLoginOrPassword
             };
 
-            var errors = ex.Errors.Select(x => x.Code).ToList();
-
-            if (IsErrorsAllFrom(errors, badRequest))
-            {
-                return new HttpError
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Errors = errors
-                };
-            }
-
             var forbidden = new List<string>
             {
                 AuthErrorCodes.NotAllowed,
                 AuthErrorCodes.UserNotInRole
             };
 
-            if (IsErrorsAllFrom(errors, forbidden))
+            var errors = ex.Errors.Select(x => x.Code).ToList();
+            HttpError httpError = null;
+
+            if (IsErrorsAllFrom(errors, badRequest))
             {
-                return new HttpError
-                {
-                    StatusCode = StatusCodes.Status403Forbidden,
-                    Errors = errors
-                };
+                httpError = CreateHttpError(StatusCodes.Status400BadRequest, errors);
+            }
+            else if (IsErrorsAllFrom(errors, forbidden))
+            {
+                httpError = CreateHttpError(StatusCodes.Status403Forbidden, errors);
+            }
+
+            if (httpError != null)
+            {
+                Log(LogLevel.Debug, ex, httpError);
+                return httpError;
             }
 
             return base.Handle(ex);

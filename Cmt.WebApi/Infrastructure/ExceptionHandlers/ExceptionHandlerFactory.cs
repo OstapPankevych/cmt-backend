@@ -22,24 +22,21 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
 
         public HttpError Create(Exception ex)
         {
-            if (ex is AuthException)
+            switch (ex)
             {
-                return _authExceptionHandler.Handle((AuthException)ex);
+                case AuthException authException:
+                    return _authExceptionHandler.Handle(authException);
+                default:
+                    return _exceptionHandler.Handle(ex);
             }
-
-            return _exceptionHandler.Handle(ex);
         }
 
-        public HttpError Create(int httpStatusCode)
-        {
-            var httpError = new HttpError
-            {
-                StatusCode = httpStatusCode,
-                Errors = new List<string> { GetErrorName(httpStatusCode) }
-            };
-
-            return httpError;
-        }
+        public HttpError Create(int httpStatusCode) 
+            => new HttpError
+                {
+                    StatusCode = httpStatusCode,
+                    Errors = new List<string> { GetErrorName(httpStatusCode) }
+                };
 
         private string GetErrorName(int httpStatusCode)
         {
