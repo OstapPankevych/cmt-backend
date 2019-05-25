@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cmt.Dal.Ef", "Cmt.Dal.Ef\Cm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cmt.Dal", "Cmt.Dal\Cmt.Dal.csproj", "{885A8297-94F9-4E84-8E8A-F7FD31BD7193}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cmt.FluentMigrations", "Cmt.FluentMigrations\Cmt.FluentMigrations.csproj", "{C69B2DA1-3245-454A-AB58-5FCE99F6659E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cmt.Dal.FluentMigrations", "Cmt.Dal.FluentMigrations\Cmt.Dal.FluentMigrations.csproj", "{C69B2DA1-3245-454A-AB58-5FCE99F6659E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

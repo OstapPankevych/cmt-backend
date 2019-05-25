@@ -1,7 +1,4 @@
-﻿using Cmt.Bll.Services;
-using Cmt.Bll.Services.Interfaces;
-using Cmt.Common.Settings;
-using Cmt.Dal.Ef;
+﻿using Cmt.Dal.Ef;
 using Cmt.Dal.Ef.Repositories;
 using Cmt.Dal.Identities;
 using Cmt.Dal.Interfaces;
