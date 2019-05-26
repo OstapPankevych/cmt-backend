@@ -25,8 +25,8 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
             return httpError;
         }
 
-        public virtual HttpError Handle(int httpStatusCode)
-            => CreateHttpError(httpStatusCode);
+        protected HttpError CreateHttpError(int statusCode, string error = null)
+            => CreateHttpError(statusCode, new List<string> { error });
 
         protected HttpError CreateHttpError(int statusCode, List<string> errors)
             => new HttpError
@@ -34,9 +34,6 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
                 StatusCode = statusCode,
                 Errors = errors
             };
-
-        protected HttpError CreateHttpError(int statusCode, string error = null)
-            => CreateHttpError(statusCode, new List<string> { error });
 
         protected void Log(LogLevel logLevel, Exception ex, HttpError httpError)
         {

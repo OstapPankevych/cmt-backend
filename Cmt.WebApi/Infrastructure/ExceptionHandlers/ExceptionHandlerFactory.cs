@@ -34,10 +34,5 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
                     return _exceptionHandler.Handle(ex);
             }
         }
-
-        public HttpError Create(int httpStatusCode)
-        {
-            return _exceptionHandler.Handle(httpStatusCode);
-        }
     }
 }
