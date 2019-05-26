@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
+using Cmt.WebApi.Infrastructure.HttpErrors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

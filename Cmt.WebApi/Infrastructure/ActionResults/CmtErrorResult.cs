@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Cmt.WebApi.Infrastructure.ExceptionHandlers;
 using Microsoft.AspNetCore.Mvc;
 using Cmt.WebApi.Infrastructure.Extensions;
+using Cmt.WebApi.Infrastructure.HttpErrors;
 
 namespace Cmt.WebApi.ActionResults.Infrastructure
 {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Cmt.WebApi.ActionResults.Infrastructure;
-using Cmt.WebApi.Infrastructure.ExceptionHandlers;
+using Cmt.WebApi.Infrastructure.HttpErrors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,11 +20,11 @@ namespace Cmt.WebApi.Infrastructure.Filters
             }
 
             var errors = context.ModelState
-                .Where(e => e.Value.Errors.Any())
-                .Select(e => e.Key)
-                .ToList();
+            .Where(e => e.Value.Errors.Any())
+            .Select(e => e.Key)
+            .ToList();
 
-            var httpError = new HttpError 
+            var httpError = new HttpError
             {
                 Errors = errors,
                 StatusCode = StatusCodes.Status400BadRequest

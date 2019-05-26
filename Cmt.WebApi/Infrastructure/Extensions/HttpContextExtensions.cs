@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Cmt.WebApi.Infrastructure.ExceptionHandlers;
+using Cmt.WebApi.Infrastructure.HttpErrors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;

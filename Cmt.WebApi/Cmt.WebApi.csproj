@@ -23,6 +23,7 @@
     <Folder Include="Infrastructure\ActionResults\" />
     <Folder Include="Models\Courses\" />
     <Folder Include="Infrastructure\Extensions\ServiceExtensions\" />
+    <Folder Include="Infrastructure\HttpErrors\" />
   </ItemGroup>
 
   <ItemGroup>

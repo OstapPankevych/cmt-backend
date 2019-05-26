@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
+namespace Cmt.WebApi.Infrastructure.HttpErrors
 {
     public class HttpError
     {

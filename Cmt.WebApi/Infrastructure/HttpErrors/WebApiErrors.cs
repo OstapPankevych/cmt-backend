@@ -1,6 +1,6 @@
-﻿namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
+﻿namespace Cmt.WebApi.Infrastructure.HttpErrors
 {
-    public static class ErrorCodes
+    public static class WebApiErrors
     {
         public const string NameIdentifierClaimMissed = "NameIdentifierClaimMissed";
     }

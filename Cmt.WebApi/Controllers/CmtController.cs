@@ -6,7 +6,7 @@ using Cmt.Bll.Services.Exceptions;
 using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebApiErrors = Cmt.WebApi.Infrastructure.ExceptionHandlers;
+using Cmt.WebApi.Infrastructure.HttpErrors;
 
 namespace Cmt.WebApi.Controllers
 {
@@ -41,7 +41,7 @@ namespace Cmt.WebApi.Controllers
             var idString = GetCurrentUserClaim(ClaimTypes.NameIdentifier);
             if (!int.TryParse(idString, out var id))
             {
-                throw new CmtException(WebApiErrors.ErrorCodes.NameIdentifierClaimMissed);
+                throw new CmtException(WebApiErrors.NameIdentifierClaimMissed);
             }
 
             return id;

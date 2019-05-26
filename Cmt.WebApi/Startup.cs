@@ -64,6 +64,7 @@ namespace Cmt.WebApi
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(InvalidModelStateFilter));
+                options.Filters.Add(typeof(ExceptionFilter));
             });
 
             services.AddHttpContextAccessor();

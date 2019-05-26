@@ -1,4 +1,5 @@
 ﻿using System;
+using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Settings;
 using Cmt.WebApi.Infrastructure.ExceptionHandlers;
@@ -15,6 +16,7 @@ namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
         {
             services.AddTransient<IExceptionHandlerFactory, ExceptionHandlerFactory>();
             services.AddTransient<IExceptionHandler<Exception>, ExceptionHandler>();
+            services.AddTransient<IExceptionHandler<CmtException>, CmtExceptionHandler>();
             services.AddTransient<IExceptionHandler<AuthException>, AuthExceptionHandler>();
 
             services.AddSingleton(GetAuthSettings(configuration));
