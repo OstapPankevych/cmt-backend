@@ -1,43 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using Cmt.Bll.Services.Exceptions;
-using Cmt.WebApi.Infrastructure.HttpErrors;
+using Cmt.WebApi.ActionResults.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
 {
-    public class ExceptionHandler : IExceptionHandler<Exception>
+    public class ExceptionHandler:
+        IExceptionHandler<Exception>
     {
         protected readonly ILogger<ExceptionHandler> Logger;
 
         public ExceptionHandler(ILogger<ExceptionHandler> logger)
         {
-            Logger = logger;
+            Logger = logger; 
         }
 
-        public virtual HttpError Handle(Exception ex)
+        public CmtErrorResult Handle(Exception ex)
         {
-            var httpError = CreateHttpError(
-                        StatusCodes.Status500InternalServerError,
-                        new List<string> { CmtErrorCodes.Unknown });
-            Log(LogLevel.Error, ex, httpError);
-            return httpError;
+            return ex is CmtException cmtException
+                ? HandleCmtException(cmtException)
+                : HandleException(ex);
         }
 
-        protected HttpError CreateHttpError(int statusCode, string error = null)
-            => CreateHttpError(statusCode, new List<string> { error });
+        protected void Log(LogLevel logLevel, Exception ex)
+        {
+            Logger.Log(logLevel, ex.Message);
+        }
 
-        protected HttpError CreateHttpError(int statusCode, List<string> errors)
-            => new HttpError
+        private CmtErrorResult HandleException(Exception ex)
+        {
+            Log(LogLevel.Error, ex);
+            return new CmtErrorResult(
+                StatusCodes.Status500InternalServerError,
+                CmtErrorCodes.Unknown);
+        }
+
+        private CmtErrorResult HandleCmtException(CmtException ex)
+        {
+            switch (ex.Error.Code)
             {
-                StatusCode = statusCode,
-                Errors = errors
-            };
-
-        protected void Log(LogLevel logLevel, Exception ex, HttpError httpError)
-        {
-            Logger.Log(logLevel, ex.Message, httpError);
+                case CmtErrorCodes.NotFound:
+                    Log(LogLevel.Debug, ex);
+                    return new CmtErrorResult(StatusCodes.Status404NotFound);
+                case CmtErrorCodes.LastModified:
+                    Log(LogLevel.Debug, ex);
+                    return new CmtErrorResult(
+                        StatusCodes.Status412PreconditionFailed,
+                        CmtErrorCodes.LastModified);
+                default:
+                    return HandleException(ex);
+            }
         }
     }
 }

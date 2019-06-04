@@ -1,10 +1,10 @@
 ﻿using System;
-using Cmt.WebApi.Infrastructure.HttpErrors;
+using Cmt.WebApi.ActionResults.Infrastructure;
 
 namespace Cmt.WebApi.Infrastructure.ExceptionHandlers
 {
     public interface IExceptionHandlerFactory
     {
-        HttpError Create(Exception ex);
+        CmtErrorResult Create(Exception ex);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Cmt.WebApi.Infrastructure.HttpErrors
+﻿namespace Cmt.WebApi.Infrastructure.Constants
 {
     public static class WebApiErrors
     {

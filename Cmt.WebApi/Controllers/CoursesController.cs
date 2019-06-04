@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Models.Courses;
-using Cmt.WebApi.Models;
 using System.Collections.Generic;
 
 namespace Cmt.WebApi.Controllers

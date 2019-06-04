@@ -1,5 +1,4 @@
-﻿using Cmt.WebApi.ActionResults.Infrastructure;
-using Cmt.WebApi.Infrastructure.ExceptionHandlers;
+﻿using Cmt.WebApi.Infrastructure.ExceptionHandlers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Cmt.WebApi.Infrastructure.Filters
@@ -15,8 +14,7 @@ namespace Cmt.WebApi.Infrastructure.Filters
 
         public void OnException(ExceptionContext context)
         {
-            var httpError = _exceptionHandlerFactory.Create(context.Exception);
-            context.Result = new CmtErrorResult(httpError);
+            context.Result = _exceptionHandlerFactory.Create(context.Exception);
         }
     }
 }

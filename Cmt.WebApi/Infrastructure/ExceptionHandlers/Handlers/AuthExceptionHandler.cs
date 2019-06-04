@@ -1,22 +1,66 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
-using Cmt.WebApi.Infrastructure.HttpErrors;
+using Cmt.WebApi.ActionResults.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
 {
-    public class AuthExceptionHandler :
-        ExceptionHandler, IExceptionHandler<AuthException>
+    public class AuthExceptionHandler : 
+        ExceptionHandler,
+        IExceptionHandler<AuthException>
     {
         public AuthExceptionHandler(ILogger<AuthExceptionHandler> logger)
             : base(logger) 
         { }
 
-        public HttpError Handle(AuthException ex)
+        public CmtErrorResult Handle(AuthException ex)
+        { 
+            var errors = ex.Errors.Select(x => x.Code).ToList();
+
+            if (IsAllErrorsMatch(errors, GetNotFoundErrors(), 
+                StatusCodes.Status404NotFound, out var notFound))
+            {
+                Log(LogLevel.Debug, ex);
+                return notFound;
+            }
+
+            if (IsAllErrorsMatch(errors, GetForbiddenErrors(),
+                StatusCodes.Status404NotFound, out var forbidden))
+            {
+                Log(LogLevel.Debug, ex);
+                return forbidden;
+            }
+
+            return base.Handle(ex);
+        }
+
+        private bool IsAllErrorsMatch(
+            IList<string> errors, 
+            IList<string> matchWith,
+            int statusCode,
+            out CmtErrorResult errorResult)
         {
-            var badRequest = new List<string>
+            if (errors.All(x => matchWith.Contains(x)))
+            {
+                errorResult = new CmtErrorResult(statusCode, errors);
+                return true;
+            }
+
+            errorResult = null;
+            return false;
+        }
+
+        private IList<string> GetForbiddenErrors() =>
+            new List<string>
+            {
+                AuthErrorCodes.NotAllowed,
+                AuthErrorCodes.UserNotInRole
+            };
+
+        private IList<string> GetNotFoundErrors() =>
+            new List<string>
             {
                 AuthErrorCodes.DuplicateEmail,
                 AuthErrorCodes.DuplicateUserName,
@@ -32,37 +76,5 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
                 AuthErrorCodes.PasswordRequiresNonAlphanumeric,
                 AuthErrorCodes.WrongLoginOrPassword
             };
-
-            var forbidden = new List<string>
-            {
-                AuthErrorCodes.NotAllowed,
-                AuthErrorCodes.UserNotInRole
-            };
-
-            var errors = ex.Errors.Select(x => x.Code).ToList();
-            HttpError httpError = null;
-
-            if (IsErrorsAllFrom(errors, badRequest))
-            {
-                httpError = CreateHttpError(StatusCodes.Status400BadRequest, errors);
-            }
-            else if (IsErrorsAllFrom(errors, forbidden))
-            {
-                httpError = CreateHttpError(StatusCodes.Status403Forbidden, errors);
-            }
-
-            if (httpError != null)
-            {
-                Log(LogLevel.Debug, ex, httpError);
-                return httpError;
-            }
-
-            return base.Handle(ex);
-        }
-
-        private bool IsErrorsAllFrom(List<string> errros, List<string> from)
-        {
-            return errros.All(x => from.Contains(x));
-        }
     }
 }

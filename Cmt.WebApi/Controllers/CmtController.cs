@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
 using Cmt.Bll.Services.Exceptions;
+using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Cmt.WebApi.Infrastructure.HttpErrors;
 
 namespace Cmt.WebApi.Controllers
 {
     public class CmtController: Controller
     {
-        protected IActionResult Created(object obj)
+        protected IActionResult Created<T>(T obj)
         {
             return StatusCode(StatusCodes.Status201Created, obj);
         }
@@ -32,8 +32,7 @@ namespace Cmt.WebApi.Controllers
 
         protected string GetCurrentUserClaim(string claim)
         {
-            return User
-                .FindFirst(x => x.Type == claim).Value;
+            return User.FindFirst(x => x.Type == claim).Value;
         }
 
         protected int GetCurrentUserId()

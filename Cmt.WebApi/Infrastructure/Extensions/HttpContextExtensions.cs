@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Cmt.WebApi.Infrastructure.HttpErrors;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -11,11 +11,14 @@ namespace Cmt.WebApi.Infrastructure.Extensions
 {
     public static class HttpContextExtensions
     {
-        public static Task WriteErrorAsync(this HttpContext context, HttpError httpError)
+        public static Task WriteErrorAsync(
+            this HttpContext context, 
+            int statusCode, 
+            IList<string> errors,
+            string message)
         {
-            var errorResponse = new { httpError.Errors };
-
-            return context.WriteModelAsync(errorResponse, httpError.StatusCode);
+            var errorResponse = new { Errors = errors, Message = message };
+            return context.WriteModelAsync(errorResponse, statusCode);
         }
 
         private static Task WriteModelAsync<TModel>(this HttpContext context,
