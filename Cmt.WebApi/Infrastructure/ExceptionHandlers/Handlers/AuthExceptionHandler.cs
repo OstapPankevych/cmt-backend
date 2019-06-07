@@ -19,47 +19,36 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
         { 
             var errors = ex.Errors.Select(x => x.Code).ToList();
 
-            if (IsAllErrorsMatch(errors, GetNotFoundErrors(), 
-                StatusCodes.Status404NotFound, out var notFound))
+            if (IsErrorsMatch(errors, GetNotFoundErrors()))
             {
                 Log(LogLevel.Debug, ex);
-                return notFound;
+                return new CmtErrorResult(StatusCodes.Status404NotFound, errors);
             }
 
-            if (IsAllErrorsMatch(errors, GetForbiddenErrors(),
-                StatusCodes.Status404NotFound, out var forbidden))
+            if (IsErrorsMatch(errors, GetForbiddenErrors()))
             {
                 Log(LogLevel.Debug, ex);
-                return forbidden;
+                return new CmtErrorResult(StatusCodes.Status403Forbidden, errors);
             }
 
             return base.Handle(ex);
         }
 
-        private bool IsAllErrorsMatch(
-            IList<string> errors, 
-            IList<string> matchWith,
-            int statusCode,
-            out CmtErrorResult errorResult)
+        private bool IsErrorsMatch(
+            IEnumerable<string> errors,
+            IEnumerable<string> matchWith)
         {
-            if (errors.All(x => matchWith.Contains(x)))
-            {
-                errorResult = new CmtErrorResult(statusCode, errors);
-                return true;
-            }
-
-            errorResult = null;
-            return false;
+            return errors.All(matchWith.Contains);
         }
 
-        private IList<string> GetForbiddenErrors() =>
+        private IEnumerable<string> GetForbiddenErrors() =>
             new List<string>
             {
                 AuthErrorCodes.NotAllowed,
                 AuthErrorCodes.UserNotInRole
             };
 
-        private IList<string> GetNotFoundErrors() =>
+        private IEnumerable<string> GetNotFoundErrors() =>
             new List<string>
             {
                 AuthErrorCodes.DuplicateEmail,

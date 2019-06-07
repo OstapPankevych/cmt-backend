@@ -11,7 +11,7 @@ namespace Cmt.WebApi.Models.Users
         public string Email { get; set; }
 
         [Required]
-        [RegularExpression(ValidationConstants.AplhabetDigitLetterReg)]
+        [RegularExpression(ValidationConstants.AlphabetDigitLetterReg)]
         [MaxLength(ValidationConstants.Length256)]
         public string Name { get; set; }
 

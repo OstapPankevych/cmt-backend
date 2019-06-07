@@ -3,6 +3,6 @@
     public static class ValidationConstants
     {
         public const int Length256 = 256;
-        public const string AplhabetDigitLetterReg = @"^[\w]+$";
+        public const string AlphabetDigitLetterReg = @"^[\w]+$";
     }
 }

@@ -14,16 +14,13 @@ namespace Cmt.WebApi.Controllers
     [Route("api/[controller]")]
     public class CoursesController : CmtController
     {
-        private readonly IMapper _mapper;
         private readonly ICoursesService _courseService;
         private readonly IAuthorizationService _authorizationService;
 
         public CoursesController(
-            IMapper mapper,
             ICoursesService coursesService,
             IAuthorizationService authorizationService)
         {
-            _mapper = mapper;
             _courseService = coursesService;
             _authorizationService = authorizationService;
         }
@@ -67,14 +64,14 @@ namespace Cmt.WebApi.Controllers
         [Route("{id}")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] Course model)
         {
-            var dbCource = await _courseService.GetAsync(id);
-            if (dbCource == null)
+            var dbCourse = await _courseService.GetAsync(id);
+            if (dbCourse == null)
             {
                 return NotFound();
             }
 
             var isOwner = await _authorizationService.AuthorizeAsync(
-                User, dbCource, Policies.CourseOwner);
+                User, dbCourse, Policies.CourseOwner);
 
             if (!isOwner.Succeeded)
             {

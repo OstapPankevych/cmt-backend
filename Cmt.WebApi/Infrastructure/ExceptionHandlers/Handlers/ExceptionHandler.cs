@@ -9,11 +9,11 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
     public class ExceptionHandler:
         IExceptionHandler<Exception>
     {
-        protected readonly ILogger<ExceptionHandler> Logger;
+        private readonly ILogger<ExceptionHandler> _logger;
 
         public ExceptionHandler(ILogger<ExceptionHandler> logger)
         {
-            Logger = logger; 
+          _logger = logger; 
         }
 
         public CmtErrorResult Handle(Exception ex)
@@ -25,7 +25,7 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
 
         protected void Log(LogLevel logLevel, Exception ex)
         {
-            Logger.Log(logLevel, ex.Message);
+          _logger.Log(logLevel, ex.Message);
         }
 
         private CmtErrorResult HandleException(Exception ex)
