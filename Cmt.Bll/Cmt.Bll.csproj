@@ -19,9 +19,4 @@
     <Folder Include="Services\Exceptions\Course\" />
     <Folder Include="DTOs\" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Authorization">
-      <HintPath>..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authorization\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
