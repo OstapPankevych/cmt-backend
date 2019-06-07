@@ -56,6 +56,14 @@ namespace Cmt.WebApi.Controllers
         [JwtAuthorize]
         public async Task<IActionResult> PostAsync([FromBody] Course model)
         {
+            var canUserCreateCourse = await _authorizationService.AuthorizeAsync(
+                User, Policies.CourseCreator);
+
+            if (!canUserCreateCourse.Succeeded)
+            {
+                return Forbid();
+            }
+
             var course = Mapper.Map<CourseDto>(model);
             course.UpdatedBy = GetCurrentUserId();
             var id = await _courseService.CreateAsync(course);
@@ -79,10 +87,8 @@ namespace Cmt.WebApi.Controllers
                 return NotFound();
             }
 
-            var isOwner = await _authorizationService.AuthorizeAsync(
-                User, dbCourse, Policies.CourseOwner);
-
-            if (!isOwner.Succeeded)
+            var isCourseOwner = await IsCourseOwner(dbCourse);
+            if (!isCourseOwner)
             {
                 return Forbid();
             }
@@ -103,9 +109,29 @@ namespace Cmt.WebApi.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
+            var dbCourse = await _courseService.GetAsync(id);
+            if (dbCourse == null)
+            {
+                return NotFound();
+            }
+
+            var isCourseOwner = await IsCourseOwner(dbCourse);
+            if (!isCourseOwner)
+            {
+                return Forbid();
+            }
+
             await _courseService.DeleteAsync(id);
 
             return NoContent();
+        }
+
+        private async Task<bool> IsCourseOwner(CourseDto dbCourse)
+        {
+            var isOwner = await _authorizationService.AuthorizeAsync(
+                User, dbCourse, Policies.CourseOwner);
+
+            return isOwner.Succeeded;
         }
     }
 }

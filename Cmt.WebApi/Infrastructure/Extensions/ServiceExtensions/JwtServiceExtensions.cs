@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Cmt.Common.Helpers;
-using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Course;
-using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Courses.Handlers;
+using Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses;
+using Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers;
 using Cmt.WebApi.Infrastructure.Constants;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;

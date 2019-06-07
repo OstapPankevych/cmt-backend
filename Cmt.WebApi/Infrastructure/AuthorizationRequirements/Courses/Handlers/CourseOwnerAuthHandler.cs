@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using Cmt.Bll.DTOs.Courses;
 using Cmt.Bll.DTOs.Users;
 using Cmt.Bll.Services.Interfaces;
-using Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Course;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cmt.WebApi.Infrastructure.AuthrorizationRequirements.Courses.Handlers
+namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
 {
     public class CourseOwnerAuthHandler : AuthorizationHandler<CourseOwnerAuthRequirement>
     {
