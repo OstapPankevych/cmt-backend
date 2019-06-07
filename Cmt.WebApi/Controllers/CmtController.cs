@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Claims;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.WebApi.Infrastructure.Constants;
-using Cmt.WebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,11 +28,6 @@ namespace Cmt.WebApi.Controllers
             return null;
         }
 
-        protected string GetCurrentUserClaim(string claim)
-        {
-            return User.FindFirst(x => x.Type == claim).Value;
-        }
-
         protected int GetCurrentUserId()
         {
             var idString = GetCurrentUserClaim(ClaimTypes.NameIdentifier);
@@ -46,10 +39,9 @@ namespace Cmt.WebApi.Controllers
             return id;
         }
 
-        protected SimpleResponse<TModel> CreateResponse<TModel>(TModel model)
-            => new SimpleResponse<TModel> { Data = model };
-
-        protected ArrayResponse<TModel> CreateResponse<TModel>(IList<TModel> models)
-            => new ArrayResponse<TModel> { Data = models };
+        private string GetCurrentUserClaim(string claim)
+        {
+            return User.FindFirst(x => x.Type == claim).Value;
+        }
     }
 }

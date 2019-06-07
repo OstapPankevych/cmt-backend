@@ -12,12 +12,10 @@ namespace Cmt.WebApi.Controllers
     public class AuthController: CmtController
     {
         private readonly IAuthService _authService;
-        private readonly IMapper _mapper;
 
-        public AuthController(IAuthService authService, IMapper mapper)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _mapper = mapper;
         }
 
         [HttpPost]
@@ -28,7 +26,13 @@ namespace Cmt.WebApi.Controllers
             var user = Mapper.Map<User>(userDto);
             var jwt = Mapper.Map<Jwt>(userDto.Jwt);
 
-            return Ok(CreateResponse(user, jwt));
+            var result = new
+            {
+                user,
+                jwt
+            };
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -37,9 +41,13 @@ namespace Cmt.WebApi.Controllers
         {
             var user = Mapper.Map<UserDto>(model);
             var id = await _authService.CreateAsync(user, model.Password);
-            var userModel = new User { Id = id };
 
-            return Created(CreateResponse(userModel, null));
+            var result = new
+            {
+                user = new User { Id = id }
+            };
+
+            return Created(result);
         }
 
         [HttpGet]
@@ -51,8 +59,5 @@ namespace Cmt.WebApi.Controllers
 
             return NoContent();
         }
-
-        private UserResponse CreateResponse(User user, Jwt jwt)
-            => new UserResponse { User = user, JwtToken = jwt };
     }
 }

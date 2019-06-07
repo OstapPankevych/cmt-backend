@@ -1,5 +1,4 @@
 ﻿using System;
-using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.Common.Settings;
 using Cmt.WebApi.Infrastructure.ExceptionHandlers;

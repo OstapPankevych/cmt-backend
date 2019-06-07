@@ -31,7 +31,9 @@ namespace Cmt.WebApi.Controllers
             var courses = await _courseService.GetAsync();
 
             var models = Mapper.Map<IList<Course>>(courses);
-            return Ok(CreateResponse(models));
+            var result = new {courses = models};
+
+            return Ok(result);
         }
 
         [HttpGet]
@@ -45,7 +47,9 @@ namespace Cmt.WebApi.Controllers
             }
 
             var model = Mapper.Map<Course>(course);
-            return Ok(CreateResponse(model));
+            var result = new {course = model};
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -56,7 +60,12 @@ namespace Cmt.WebApi.Controllers
             course.UpdatedBy = GetCurrentUserId();
             var id = await _courseService.CreateAsync(course);
 
-            return Created(CreateResponse(new Course { Id = id }));
+            var result = new
+            {
+                course = new Course {Id = id}
+            };
+
+            return Created(result);
         }
 
         [HttpPut]

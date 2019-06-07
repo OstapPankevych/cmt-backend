@@ -11,7 +11,7 @@ namespace Cmt.WebApi.Infrastructure.Middleware
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
         public ExceptionHandlingMiddleware(
             ILogger<ExceptionHandlingMiddleware> logger,
