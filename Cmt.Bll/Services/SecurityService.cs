@@ -1,19 +1,32 @@
-﻿using Cmt.Bll.DTOs.Courses;
+﻿using System.Security.Claims;
+using Cmt.Bll.DTOs.Courses;
 using Cmt.Bll.DTOs.Users;
+using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Interfaces;
 
 namespace Cmt.Bll.Services
 {
     public class SecurityService : ISecurityService
     {
-        public bool IsOwner(CourseDto course, UserDto user)
+        public bool IsOwner(ClaimsPrincipal user, CourseDto course)
         {
             if (!course.UpdatedBy.HasValue)
             {
-                return false;
+                throw new CmtException(CmtErrorCodes.BadData);
             }
 
-            return course.UpdatedBy.Value == user.Id;
+            if (int.TryParse(GetClaimValue(user, ClaimTypes.NameIdentifier),
+                out var userId))
+            {
+                throw new CmtException(CmtErrorCodes.Unauthorized);
+            }
+
+            return course.UpdatedBy.Value == userId;
+        }
+
+        private string GetClaimValue(ClaimsPrincipal user, string type)
+        {
+            return user?.FindFirstValue(type);
         }
     }
 }

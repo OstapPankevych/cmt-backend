@@ -21,16 +21,8 @@ namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
             CourseOwnerAuthRequirement requirement)
         {
             var course = context.Resource as CourseDto;
-            var nameIdentifierClaim = context.User
-                .FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
 
-            if (!int.TryParse(nameIdentifierClaim.Value, out var userId))
-            {
-                return Fail(context);
-            }
-
-            var user = new UserDto { Id = userId };
-            if (!_securityService.IsOwner(course, user))
+            if (!_securityService.IsOwner(course, context.User))
             {
                 return Fail(context);
             }
