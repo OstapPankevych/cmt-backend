@@ -1,7 +1,5 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Cmt.Bll.DTOs.Courses;
-using Cmt.Bll.DTOs.Users;
 using Cmt.Bll.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
@@ -22,7 +20,7 @@ namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
         {
             var course = context.Resource as CourseDto;
 
-            if (!_securityService.IsOwner(course, context.User))
+            if (!_securityService.IsOwner(context.User, course))
             {
                 return Fail(context);
             }

@@ -57,7 +57,7 @@ namespace Cmt.Bll.Services
             if (result.Succeeded)
             {
                 var res = _mapper.Map<UserDto>(user);
-                res.Jwt = await GetJwtToken(user); ;
+                res.Jwt = await GetJwtToken(user);
 
                 return res;
             }

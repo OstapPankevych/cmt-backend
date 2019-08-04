@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Cmt.Bll.DTOs.Courses;
-using Cmt.Bll.DTOs.Users;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.Services.Interfaces;
 

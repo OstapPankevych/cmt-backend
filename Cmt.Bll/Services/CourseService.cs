@@ -7,7 +7,6 @@ using Cmt.Dal.Interfaces;
 using Cmt.Dal.Interfaces.Repositories;
 using Cmt.Bll.Services.Exceptions;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cmt.Bll.Services
 {

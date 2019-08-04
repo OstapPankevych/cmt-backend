@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Cmt.Bll.DTOs.Courses;
-using Cmt.Bll.DTOs.Users;
 
 namespace Cmt.Bll.Services.Interfaces
 {
