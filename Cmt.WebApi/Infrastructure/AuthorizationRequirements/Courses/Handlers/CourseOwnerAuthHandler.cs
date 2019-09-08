@@ -1,32 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Cmt.Bll.DTOs.Courses;
-using Cmt.Bll.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
 {
-    public class CourseOwnerAuthHandler : AuthorizationHandler<CourseOwnerAuthRequirement>
+    public class CourseOwnerAuthHandler : AuthorizationHandler<CourseOwnerRequirement>
     {
-        private readonly ISecurityService _securityService;
-
-        public CourseOwnerAuthHandler(ISecurityService securityService)
-        {
-            _securityService = securityService;
-        }
-
         protected override Task HandleRequirementAsync(
-            AuthorizationHandlerContext context, 
-            CourseOwnerAuthRequirement requirement)
+            AuthorizationHandlerContext context,
+            CourseOwnerRequirement requirement)
         {
             var course = context.Resource as CourseDto;
+            var userId = GetClaimValue(context.User, ClaimTypes.NameIdentifier);
 
-            if (!_securityService.IsOwner(context.User, course))
+            if (userId == course.CreatedBy.Value.ToString())
             {
-                return Fail(context);
+                context.Succeed(requirement);
+                return Task.CompletedTask;
             }
 
-            context.Succeed(requirement);
-            return Task.CompletedTask;
+            return Fail(context);
+        }
+
+        private string GetClaimValue(ClaimsPrincipal user, string type)
+        {
+            return user.FindFirstValue(type);
         }
 
         private Task Fail(AuthorizationHandlerContext context)

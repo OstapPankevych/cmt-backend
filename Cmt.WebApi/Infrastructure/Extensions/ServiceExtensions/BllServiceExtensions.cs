@@ -15,7 +15,6 @@ namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
         public static void AddBll(this IServiceCollection services)
         {
             services.AddTransient<ICoursesService, CoursesService>();
-            services.AddTransient<ISecurityService, SecurityService>();
 
             services.AddTransient<IAuthService, AuthService>(
                provider => new AuthService(

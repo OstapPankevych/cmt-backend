@@ -23,7 +23,7 @@ namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
                     opts.AddPolicy(Policies.CourseOwner, policy => {
                         policy.RequireAuthenticatedUser();
                         policy.RequireClaim(ClaimTypes.NameIdentifier);
-                        policy.AddRequirements(new CourseOwnerAuthRequirement());
+                        policy.AddRequirements(new CourseOwnerRequirement());
                     });
                 })
                 .AddAuthentication()

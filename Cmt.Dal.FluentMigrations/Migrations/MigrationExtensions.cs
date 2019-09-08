@@ -11,6 +11,7 @@ namespace Cmt.Migrations.Migrations
                 .WithColumn("Id").AsInt32().NotNullable().Identity()
                 .WithColumn("CreatedAt").AsDateTime().NotNullable()
                 .WithColumn("UpdatedAt").AsDateTime().NotNullable()
+                .WithColumn("CreatedBy").AsInt32().NotNullable()
                 .WithColumn("UpdatedBy").AsInt32().NotNullable();
 
             return syntax;

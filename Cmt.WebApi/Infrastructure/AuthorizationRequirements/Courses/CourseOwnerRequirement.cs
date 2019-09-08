@@ -2,7 +2,7 @@
 
 namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses
 {
-    public class CourseOwnerAuthRequirement: IAuthorizationRequirement
+    public class CourseOwnerRequirement: IAuthorizationRequirement
     {
     }
 }
