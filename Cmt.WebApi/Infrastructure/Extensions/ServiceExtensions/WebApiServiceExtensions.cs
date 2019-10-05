@@ -6,17 +6,18 @@ using Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
 {
     public static class WebApiServiceExtensions
     {
-        public static void AddWebApi(this IServiceCollection services, IConfiguration configuration)
+        public static void AddWebApi(this IServiceCollection services, 
+            IConfiguration configuration)
         {
             services.AddTransient<IExceptionHandlerFactory, ExceptionHandlerFactory>();
-            services.AddTransient<IExceptionHandler<Exception>, ExceptionHandler>();
             services.AddTransient<IExceptionHandler<AuthException>, AuthExceptionHandler>();
-
+            services.AddTransient<IExceptionHandler<Exception>, ExceptionHandler>();
             services.AddSingleton(GetAuthSettings(configuration));
         }
 

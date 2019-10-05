@@ -2,6 +2,7 @@
 using System.Linq;
 using Cmt.Bll.Services.Exceptions.Auth;
 using Cmt.WebApi.ActionResults.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -11,8 +12,10 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
         ExceptionHandler,
         IExceptionHandler<AuthException>
     {
-        public AuthExceptionHandler(ILogger<AuthExceptionHandler> logger)
-            : base(logger) 
+        public AuthExceptionHandler(
+            ILogger<AuthExceptionHandler> logger,
+            IHostingEnvironment env)
+            : base(logger, env) 
         { }
 
         public CmtErrorResult Handle(AuthException ex)

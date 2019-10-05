@@ -2,7 +2,6 @@
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Bll.DTOs.Courses;
-using Cmt.WebApi.Infrastructure.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Cmt.WebApi.Infrastructure.Constants;
@@ -53,19 +52,14 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpPost]
-        [JwtAuthorize]
+        [Authorize(Policy = Policies.CourseCreator)]
         public async Task<IActionResult> PostAsync([FromBody] Course model)
         {
-            var canUserCreateCourse = await _authorizationService.AuthorizeAsync(
-                User, Policies.CourseCreator);
-
-            if (!canUserCreateCourse.Succeeded)
-            {
-                return Forbid();
-            }
-
             var course = Mapper.Map<CourseDto>(model);
-            course.UpdatedBy = GetCurrentUserId();
+            var userOwnerId = GetCurrentUserId();
+            course.UpdatedBy = userOwnerId;
+            course.CreatedBy = userOwnerId;
+
             var id = await _courseService.CreateAsync(course);
 
             var result = new
@@ -77,7 +71,7 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpPut]
-        [JwtAuthorize]
+        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] Course model)
         {
@@ -105,7 +99,7 @@ namespace Cmt.WebApi.Controllers
         }
 
         [HttpDelete]
-        [JwtAuthorize]
+        [Authorize]
         [Route("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

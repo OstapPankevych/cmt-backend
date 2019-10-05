@@ -2,9 +2,9 @@
 using AutoMapper;
 using Cmt.Bll.Services.Interfaces;
 using Cmt.Bll.DTOs.Users;
-using Cmt.WebApi.Infrastructure.Attributes;
 using Cmt.WebApi.Models.Users;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cmt.WebApi.Controllers
 {
@@ -52,7 +52,7 @@ namespace Cmt.WebApi.Controllers
 
         [HttpGet]
         [Route("SignOut")]
-        [JwtAuthorize]
+        [Authorize]
         public async Task<IActionResult> SignOutAsync()
         {
             await _authService.SignOutAsync();

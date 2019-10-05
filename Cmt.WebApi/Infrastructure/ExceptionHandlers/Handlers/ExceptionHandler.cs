@@ -1,6 +1,7 @@
 ﻿using System;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.WebApi.ActionResults.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -10,10 +11,14 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
         IExceptionHandler<Exception>
     {
         private readonly ILogger<ExceptionHandler> _logger;
+        private readonly IHostingEnvironment _env;
 
-        public ExceptionHandler(ILogger<ExceptionHandler> logger)
+        public ExceptionHandler(
+            ILogger<ExceptionHandler> logger,
+            IHostingEnvironment env)
         {
-          _logger = logger; 
+            _logger = logger;
+            _env = env;
         }
 
         public CmtErrorResult Handle(Exception ex)
@@ -31,9 +36,12 @@ namespace Cmt.WebApi.Infrastructure.ExceptionHandlers.Handlers
         private CmtErrorResult HandleException(Exception ex)
         {
             Log(LogLevel.Error, ex);
-            return new CmtErrorResult(
-                StatusCodes.Status500InternalServerError,
-                CmtErrorCodes.Unknown);
+
+            var err = _env.IsDevelopment()
+                ? (ex.GetType().ToString(), $"inner: {ex.Message};{ex.InnerException}")
+                : (CmtErrorCodes.Unknown, null);
+
+            return new CmtErrorResult(StatusCodes.Status500InternalServerError, err.Item1, err.Item2);
         }
 
         private CmtErrorResult HandleCmtException(CmtException ex)

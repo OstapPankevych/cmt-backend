@@ -38,7 +38,7 @@ namespace Cmt.WebApi
         {
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
-            app.UseJwt();
+            app.UseAuthentication();
             app.UseMvc();
         }
 
@@ -55,9 +55,10 @@ namespace Cmt.WebApi
             services.AddLogging(Configuration.GetSection("Logging"));
             services.AddBll();
             services.AddWebApi(Configuration);
-            services.AddIdentity(Configuration);
-            services.AddJwt(Configuration);
             services.AddEfDb(Configuration);
+            services.AddIdentity(Configuration);
+            services.AddAuthentication(Configuration);
+            services.AddPolicies();
             services.AddEfRepositories();
             services.AddMapper();
 
