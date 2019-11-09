@@ -2,7 +2,7 @@
 
 namespace Cmt.Dal.Interfaces.Repositories
 {
-    public interface ICourseRepository: IRepository<CourseEntity, int>
+    public interface ICourseRepository: IRepository<CourseEntity>
     {
     }
 }

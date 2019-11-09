@@ -14,7 +14,7 @@ namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
             var course = context.Resource as CourseDto;
             var userId = GetClaimValue(context.User, ClaimTypes.NameIdentifier);
 
-            if (userId == course.CreatedBy.Value.ToString())
+            if (userId == course.CreatedBy.ToString())
             {
                 context.Succeed(requirement);
                 return Task.CompletedTask;

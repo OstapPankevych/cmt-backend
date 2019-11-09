@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using Cmt.Bll.Services.Exceptions;
 using Cmt.Bll.DTOs;
 using Cmt.Dal.Entities;
@@ -7,81 +6,49 @@ using Cmt.Dal.Interfaces;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using AutoMapper;
 
 namespace Cmt.Bll.Services
 {
     public abstract class Service
     {
         protected readonly IUnitOfWork UnitOfWork;
-        private readonly IMapper Mapper;
 
-        protected Service(
-            IMapper mapper,
-            IUnitOfWork unitOfWork)
+        protected Service(IUnitOfWork unitOfWork)
         {
-            Mapper = mapper;
             UnitOfWork = unitOfWork;
         }
 
-        protected TEntity CreateEntity<TId, TDto, TEntity>(TDto dto)
-            where TDto : Dto<TId>
-            where TEntity : Entity<TId>
-        {
-            var entity = Mapper.Map<TEntity>(dto);
-            SetCreatedDates(entity);
-
-            return entity;
-        }
-
-        protected void UpdateEntity<TId, TDto, TEntity>(TDto dto, TEntity dbEntity)
-            where TDto: Dto<TId>
+        protected void UpdateEntity<TId, TEntity>(
+            Dto<TId> dto,
+            TEntity entity)
             where TEntity: Entity<TId>
         {
-            var entity = Mapper.Map<TEntity>(dto);
-            CopyProperties<TId, TEntity>(entity, dbEntity);
-            SetUpdatedDates(entity);
-        }
-
-        protected void SetCreatedDates<TId>(Entity<TId> entity)
-        {
-            var now = DateTime.UtcNow;
-            entity.CreatedAt = now;
-            entity.UpdatedAt = now;
-        }
-
-        protected void SetUpdatedDates<TId>(Entity<TId> entity)
-        {
-            entity.UpdatedAt = DateTime.UtcNow;
-        }
-
-        protected void CheckUpdatedAt(DateTime? current, DateTime db)
-        {
-            if (!current.HasValue || current < db)
+            if (dto.UpdatedAt < entity.UpdatedAt)
             {
                 throw new CmtException(CmtErrorCodes.LastModified);
             }
+
+            var source = Mapper.Map<TEntity>(dto);
+            CopyProperties<TId, TEntity> (source, entity);
+            entity.UpdatedAt = DateTime.UtcNow;
         }
 
         protected void CopyProperties<TId, TEntity>(
             TEntity source,
-            TEntity destination,
-            bool ignoreBaseEntityProps = true)
+            TEntity destination)
             where TEntity : Entity<TId>
         {
-            var properties = GetProps(typeof(TEntity)).ToList();
+            var type = source.GetType();
+            var sourceProperties = GetProps(type).ToList();
 
-            if (ignoreBaseEntityProps)
-            {
-                var baseProps = GetProps(typeof(Entity<TId>))
-                    .Select(x => x.Name)
-                    .ToList();
+            var rootEntityProps = GetRootEntityProperties<TId>();
 
-                properties = properties
-                    .Where(x => !baseProps.Contains(x.Name))
-                    .ToList();
-            }
+            sourceProperties = sourceProperties
+                .Where(x => !rootEntityProps.Contains(x.Name))
+                .ToList();
 
-            properties.ForEach(x => x.SetValue(destination, x.GetValue(source)));
+            sourceProperties.ForEach(x => x.SetValue(destination, x.GetValue(source)));
         }
 
         private IEnumerable<PropertyInfo> GetProps(Type type)
@@ -89,6 +56,13 @@ namespace Cmt.Bll.Services
             return type
                 .GetProperties()
                 .Where(x => x.CanRead && x.CanWrite);
+        }
+
+        private IList<string> GetRootEntityProperties<TId>()
+        {
+            return GetProps(typeof(Entity<TId>))
+                    .Select(x => x.Name)
+                    .ToList();
         }
     }
 }

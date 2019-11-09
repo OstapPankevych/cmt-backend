@@ -7,6 +7,7 @@ using Cmt.Dal.Interfaces;
 using Cmt.Dal.Interfaces.Repositories;
 using Cmt.Bll.Services.Exceptions;
 using System.Collections.Generic;
+using System;
 
 namespace Cmt.Bll.Services
 {
@@ -15,10 +16,9 @@ namespace Cmt.Bll.Services
         private readonly ICourseRepository _courseRepository;
 
         public CoursesService(
-            IMapper mapper,
             IUnitOfWork unitOfWork,
             ICourseRepository courseRepository)
-            : base (mapper, unitOfWork)
+            : base (unitOfWork)
         {
             _courseRepository = courseRepository;
         }
@@ -41,7 +41,9 @@ namespace Cmt.Bll.Services
 
         public async Task<int> CreateAsync(CourseDto dto)
         {
-            var entity = CreateEntity<int, CourseDto, CourseEntity>(dto);
+            var entity = Mapper.Map<CourseEntity>(dto);
+            entity.CreatedAt = DateTime.UtcNow;
+
             await _courseRepository.AddAsync(entity);
 
             return entity.Id;
@@ -55,8 +57,7 @@ namespace Cmt.Bll.Services
                 throw new CmtException(CmtErrorCodes.NotFound);
             }
 
-            CheckUpdatedAt(dto.UpdatedAt, dbEntity.UpdatedAt);
-            UpdateEntity<int, CourseDto, CourseEntity>(dto, dbEntity);
+            UpdateEntity(dto, dbEntity);
 
             await _courseRepository.UpdateAsync(dbEntity);
         }

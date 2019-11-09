@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Cmt.Bll.DTOs.Users;
-using Cmt.Dal.Identities;
 
 namespace Cmt.Bll.Services.Interfaces
 {

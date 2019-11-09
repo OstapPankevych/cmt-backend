@@ -56,8 +56,7 @@ namespace Cmt.WebApi.Controllers
         public async Task<IActionResult> PostAsync([FromBody] Course model)
         {
             var course = Mapper.Map<CourseDto>(model);
-            var userOwnerId = GetCurrentUserId();
-            course.UpdatedBy = userOwnerId;
+            var userOwnerId = GetRequireCurrentUserId();
             course.CreatedBy = userOwnerId;
 
             var id = await _courseService.CreateAsync(course);
@@ -90,8 +89,7 @@ namespace Cmt.WebApi.Controllers
             var course = Mapper.Map<CourseDto>(model);
 
             course.Id = id;
-            course.UpdatedBy = GetCurrentUserId();
-            course.UpdatedAt = GetLastModifiedUtcHeader();
+            course.UpdatedAt = GetRequireLastModifierUtcHeader();
 
             await _courseService.UpdateAsync(course);
 

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cmt.Dal.Entities;
 using Cmt.Dal.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cmt.Dal.Ef.Repositories
 {
-    public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId>
-        where TEntity: Entity<TId>
+    public abstract class Repository<TEntity> : IRepository<TEntity>
+        where TEntity: class
     {
         protected CmtContext DbContext { get; }
         protected DbSet<TEntity> DbSet;
@@ -29,7 +28,7 @@ namespace Cmt.Dal.Ef.Repositories
             return await GetAll().ToArrayAsync();
         }
 
-        public virtual async Task<TEntity> GetAsync(TId id)
+        public virtual async Task<TEntity> GetAsync<TId>(TId id)
         {
             return await DbContext.FindAsync<TEntity>(id);
         }
@@ -48,7 +47,7 @@ namespace Cmt.Dal.Ef.Repositories
             await DbContext.SaveChangesAsync();
         }
 
-        public virtual async Task RemoveAsync(TId id)
+        public virtual async Task RemoveAsync<TId>(TId id)
         {
             var entity = await DbSet.FindAsync(id);
             DbSet.Attach(entity);

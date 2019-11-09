@@ -28,15 +28,34 @@ namespace Cmt.WebApi.Controllers
             return null;
         }
 
-        protected int GetCurrentUserId()
+        protected DateTime GetRequireLastModifierUtcHeader()
+        {
+            var lastModifier = GetLastModifiedUtcHeader();
+
+            return lastModifier != null
+                ? lastModifier.Value
+                : throw new CmtException(CmtErrorCodes.LastModified);
+        }
+
+        protected int? GetCurrentUserId()
         {
             var idString = GetCurrentUserClaim(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(idString, out var id))
+
+            if (int.TryParse(idString, out var id))
             {
-                throw new CmtException(WebApiErrors.NameIdentifierClaimMissed);
+                return id;
             }
 
-            return id;
+            return null;
+        }
+
+        protected int GetRequireCurrentUserId()
+        {
+            var userId = GetCurrentUserId();
+
+            return userId != null
+                ? userId.Value
+                : throw new CmtException(WebApiErrors.NameIdentifierClaimMissed);
         }
 
         private string GetCurrentUserClaim(string claim)

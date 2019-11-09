@@ -76,8 +76,8 @@ namespace Cmt.Bll.Services
             {
                 throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.RequiresTwoFactor) } };
             }
-            
-            throw new AuthException { Errors = new[] { new ErrorResult(CmtErrorCodes.Unknown) } };
+
+            throw new AuthException { Errors = new[] { new ErrorResult(AuthErrorCodes.WrongLoginOrPassword) } };
         }
 
         public async Task SignOutAsync()
@@ -88,40 +88,38 @@ namespace Cmt.Bll.Services
         public async Task<int> CreateAsync(UserDto userDto, string password)
         {
             var user = _mapper.Map<CmtIdentityUser>(userDto);
-            using (var transaction = _unitOfWork.BeginTransaction())
+            using var transaction = _unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var result = await _userManager.CreateAsync(user, password);
+                if (!result.Succeeded)
                 {
-                    var result = await _userManager.CreateAsync(user, password);
-                    if (!result.Succeeded)
-                    {
-                        throw new AuthException { Errors = GetErrors(result.Errors) };
-                    }
+                    throw new AuthException { Errors = GetErrors(result.Errors) };
+                }
 
-                    var role = await CreateRoleIfNotExists(UserRoles.User);
+                var role = await CreateRoleIfNotExists(UserRoles.User);
 
-                    var claims = new List<Claim>
+                var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Role, role.Name),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.UserName)
                     };
 
-                    var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
-                    if (!userClaimsResult.Succeeded)
-                    {
-                        throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
-                    }
-
-                    transaction.Commit();
-
-                    return user.Id;
-                }
-                catch (Exception)
+                var userClaimsResult = await _userManager.AddClaimsAsync(user, claims);
+                if (!userClaimsResult.Succeeded)
                 {
-                    transaction.Rollback();
-                    throw;
+                    throw new AuthException { Errors = GetErrors(userClaimsResult.Errors) };
                 }
+
+                transaction.Commit();
+
+                return user.Id;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
             }
         }
 

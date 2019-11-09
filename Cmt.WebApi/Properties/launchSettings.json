@@ -18,12 +18,12 @@
         },
         "Cmt.WebApi": {
             "commandName": "Project",
-            "launchBrowser": true,
+            "launchBrowser": false,
             "launchUrl": "api/values",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "applicationUrl": "http://localhost:56549/swagger"
+            "applicationUrl": "http://localhost:56549"
         }
     }
 }

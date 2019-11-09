@@ -4,8 +4,16 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Constants\" />
+    <Folder Include="Types\" />
+    <Folder Include="Types\Audit\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Identity\CmtIdentityUser.cs" />
@@ -15,6 +23,9 @@
     <Compile Remove="DTOs\Courses\CourseTypeDto.cs" />
     <Compile Remove="Extensions\AutoMapperExtensions.cs" />
     <Compile Remove="Constants\CmtClaimTypes.cs" />
+    <Compile Remove="Types\Audit.cs" />
+    <Compile Remove="Types\Audit\AuditType %28another copy%29.cs" />
+    <Compile Remove="Types\Audit\AuditType %28copy%29.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
