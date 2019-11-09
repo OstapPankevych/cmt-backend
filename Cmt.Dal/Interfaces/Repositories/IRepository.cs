@@ -9,6 +9,6 @@ namespace Cmt.Dal.Interfaces.Repositories
         Task<TEntity> GetAsync<TId>(TId id);
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
-        Task RemoveAsync<TId>(TId id);
+        Task RemoveAsync(TEntity id);
     }
 }

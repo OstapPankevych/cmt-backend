@@ -7,6 +7,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using AutoMapper;
+using Cmt.Dal.Interfaces.Repositories;
+using System.Threading.Tasks;
 
 namespace Cmt.Bll.Services
 {
@@ -19,15 +21,30 @@ namespace Cmt.Bll.Services
             UnitOfWork = unitOfWork;
         }
 
-        protected void UpdateEntity<TId, TEntity>(
-            Dto<TId> dto,
-            TEntity entity)
+        protected void CheckUpdatedAt<TId, TEntity>(Dto<TId> dto, TEntity entity)
+            where TEntity : Entity<TId>
+        {
+            if (dto.UpdatedAt > entity.UpdatedAt)
+            {
+                return;
+            }
+
+            throw new CmtException(CmtErrorCodes.LastModified);
+        }
+
+        protected async Task<TEntity> GetRequiredEntity<TEntity, TId>(
+            IRepository<TEntity> repository,
+            TId id)
+        {
+            var entity = await repository.GetAsync(id);
+
+            return entity ?? throw new CmtException(CmtErrorCodes.NotFound);
+        }
+
+        protected void UpdateEntity<TId, TEntity>(Dto<TId> dto, TEntity entity)
             where TEntity: Entity<TId>
         {
-            if (dto.UpdatedAt < entity.UpdatedAt)
-            {
-                throw new CmtException(CmtErrorCodes.LastModified);
-            }
+            CheckUpdatedAt(dto, entity);
 
             var source = Mapper.Map<TEntity>(dto);
             CopyProperties<TId, TEntity> (source, entity);

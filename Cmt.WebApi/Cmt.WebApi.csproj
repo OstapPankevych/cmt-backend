@@ -21,7 +21,7 @@
     <Folder Include="Infrastructure\ExceptionHandlers\" />
     <Folder Include="Infrastructure\Configuration\" />
     <Folder Include="Infrastructure\Constants\" />
-    <Folder Include="Infrastructure\AuthorizationRequirements\" />
+    <Folder Include="Infrastructure\Authorizations\" />
     <Folder Include="Infrastructure\Attributes\" />
     <Folder Include="Infrastructure\ActionResults\" />
     <Folder Include="Models\Courses\" />

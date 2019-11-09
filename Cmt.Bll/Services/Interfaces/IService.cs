@@ -7,7 +7,7 @@ namespace Cmt.Bll.Services.Interfaces
     public interface IService<TDto, TId>
         where TDto: Dto<TId>
     {
-        Task<TId> CreateAsync(TDto dto);
+        Task<TDto> CreateAsync(TDto dto);
 
         Task<TDto> GetAsync(TId id);
 
@@ -15,6 +15,6 @@ namespace Cmt.Bll.Services.Interfaces
 
         Task UpdateAsync(TDto dto);
 
-        Task DeleteAsync(TId id);
+        Task DeleteAsync(TDto dto);
     }
 }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Cmt.Bll.DTOs.Courses;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers
+namespace Cmt.WebApi.Infrastructure.Authorization.Courses.Handlers
 {
     public class CourseOwnerAuthHandler : AuthorizationHandler<CourseOwnerRequirement>
     {

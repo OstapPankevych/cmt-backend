@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
-using Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses;
-using Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers;
+using Cmt.WebApi.Infrastructure.Authorization.Courses;
+using Cmt.WebApi.Infrastructure.Authorization.Courses.Handlers;
 using Cmt.WebApi.Infrastructure.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,7 @@ namespace Cmt.WebApi.Infrastructure.Extensions.ServiceExtensions
         public static void AddPolicies(this IServiceCollection services)
         {
             services
-                .AddAuthorization(opts => AddPolicies(opts));
+                .AddAuthorization(AddPolicies);
 
             services.AddTransient<IAuthorizationHandler, CourseOwnerAuthHandler>();
         }

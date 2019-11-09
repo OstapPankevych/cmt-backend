@@ -47,11 +47,9 @@ namespace Cmt.Dal.Ef.Repositories
             await DbContext.SaveChangesAsync();
         }
 
-        public virtual async Task RemoveAsync<TId>(TId id)
+        public virtual async Task RemoveAsync(TEntity entity)
         {
-            var entity = await DbSet.FindAsync(id);
-            DbSet.Attach(entity);
-            DbContext.Entry(entity).State = EntityState.Deleted;
+            DbContext.Remove(entity);
 
             await DbContext.SaveChangesAsync();
         }

@@ -13,7 +13,10 @@ namespace Cmt.WebApi.Controllers
     {
         private readonly IAuthService _authService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(
+            IAuthService authService,
+            IAuthorizationService authorizationService)
+            : base(authorizationService)
         {
             _authService = authService;
         }

@@ -1,5 +1,5 @@
 ﻿using Cmt.Common.Helpers;
-using Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses.Handlers;
+using Cmt.WebApi.Infrastructure.Authorization.Courses.Handlers;
 using Cmt.WebApi.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

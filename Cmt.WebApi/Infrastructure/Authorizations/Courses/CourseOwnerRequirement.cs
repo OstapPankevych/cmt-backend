@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Cmt.WebApi.Infrastructure.AuthorizationRequirements.Courses
+namespace Cmt.WebApi.Infrastructure.Authorization.Courses
 {
     public class CourseOwnerRequirement: IAuthorizationRequirement
     {

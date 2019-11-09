@@ -39,32 +39,31 @@ namespace Cmt.Bll.Services
             return dto;
         }
 
-        public async Task<int> CreateAsync(CourseDto dto)
+        public async Task<CourseDto> CreateAsync(CourseDto dto)
         {
             var entity = Mapper.Map<CourseEntity>(dto);
             entity.CreatedAt = DateTime.UtcNow;
 
             await _courseRepository.AddAsync(entity);
+            var course = Mapper.Map<CourseDto>(entity);
 
-            return entity.Id;
+            return course;
         }
 
         public async Task UpdateAsync(CourseDto dto)
         {
-            var dbEntity = await _courseRepository.GetAsync(dto.Id);
-            if (dbEntity == null)
-            {
-                throw new CmtException(CmtErrorCodes.NotFound);
-            }
+            var dbEntity = await GetRequiredEntity(_courseRepository, dto.Id);
 
             UpdateEntity(dto, dbEntity);
 
             await _courseRepository.UpdateAsync(dbEntity);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(CourseDto dto)
         {
-            await _courseRepository.GetAsync(id);
+            var dbEntity = await GetRequiredEntity(_courseRepository, dto.Id);
+
+            await _courseRepository.RemoveAsync(dbEntity);
         }
     }
 }
